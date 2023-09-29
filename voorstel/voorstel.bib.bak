@@ -164,11 +164,4 @@
   title        = {Pause-Less GC for Improving Java Responsiveness},
 }
 
-@InProceedings{Cavanna2003,
-  author = {Cavanna, Carlos},
-  date   = {2003},
-  title  = {The Design and Implementation of a Java Virtual Machine on a Cluster of Workstations},
-  url    = {https://api.semanticscholar.org/CorpusID:1747524},
-}
-
 @Comment{jabref-meta: databaseType:biblatex;}
