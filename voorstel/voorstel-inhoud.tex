@@ -3,7 +3,7 @@
 \section{Introductie}%
 \label{sec:introductie}
 %De prestatie van een programma is een van de belangrijkste aspecten van het ontwikkelen van eender welk software, in deze onderzoek zal voornamelijk de geheugengebruik en totale uitvoeringstijd van de Garbage Collection van de applicatie gemeten worden.
-Dit onderzoek zal zich verdiepen op de invloed dat Garbage Collection heeft op de prestatie van Java programma's, specifieker voor programma's die naar mainframe gemigreerd worden .
+Dit onderzoek zal zich verdiepen op welke invloed Garbage Collection heeft op de prestatie van Java programma's, specifieker voor programma's die naar mainframe gemigreerd worden.
 De geheugengebruik en totale uitvoeringstijd van de Garbage Collection van de applicatie zal gemeten worden en gebruikt worden voor de vergelijkingen.
 
 Garbage Collection is een essentieel onderdeel van Java, het ruimt onnodige objecten op in het geheugen om het weer vrij te maken.
@@ -19,8 +19,8 @@ Er zijn bepaalde deelvragen die zullen uitgewerkt worden, namelijk:
     \item Wat zijn de verschillende use cases voor de verschillende Garbage Collectors?  
 \end{enumerate}
 
-Aan het eind van deze onderzoek zal blijken als er een correlatie is tussen Garbage collection voor Java programma's op mainframe en Java programma's niet op mainframe.
-Alsook zal er blijken wat de mogelijkheden zijn om een Java programma op mainframe beter te laten presteren door de gebruikte Garbage Collector te veranderen, en,of hem aan te passen via aanpasbare parameters, zoals de \textit{-Xmx} parameter om de maximale heap geheugen in te stellen, en de \textit{-XX:MaxGCPauseMillis} parameter om de maximale pauzetijd van de Garbage Collector in te stellen.
+Aan het eind van dit onderzoek zal blijken als er een correlatie is tussen Garbage collection voor Java programma's op mainframe en Java programma's niet op mainframe.
+Alsook zal er blijken wat de mogelijkheden zijn om een Java programma op mainframe beter te laten presteren door de gebruikte Garbage Collector te veranderen, en, of hem aan te passen via aanpasbare parameters, zoals de \textit{-Xmx} parameter om de maximale heap geheugen in te stellen, en de \textit{-XX:MaxGCPauseMillis} parameter om de maximale pauzetijd van de Garbage Collector in te stellen.
 
 
 %Waarover zal je bachelorproef gaan? Introduceer het thema en zorg dat volgende zaken zeker duidelijk aanwezig zijn:
@@ -46,7 +46,7 @@ Alsook zal er blijken wat de mogelijkheden zijn om een Java programma op mainfra
 \label{sec:state-of-the-art}
 
 Garbage Collection is een essentieel onderdeel van Java, het maakt automatisch geheugenbeheer mogelijk waardoor de ontwikkelaar niet zelf expliciet het geheugen moet beheren in zijn programma.
-Het hoofdprincipe van de automatische geheugenbeheer in Java is om de geheugen van objecten waarnaar niet meer in de \textit{heap} geheugen verwezen wordt te herstellen en terug te voorzien.
+Het hoofdprincipe van de automatische geheugenbeheer in Java is om het geheugen van objecten waarnaar niet meer in de \textit{heap} geheugen verwezen wordt te herstellen en terug te voorzien.
 Het is mogelijk om met de \textit{System.gc()} methode een expliciete aanvraag voor Garbage Collection te versturen naar de JVM, maar als er niet voldoende geheugen is om Garbage Collection uit te voeren zal de JVM dit ook niet doen.
 
 
@@ -92,11 +92,17 @@ Door onderzoek naar Garbage Collection, waaronder \textcite{Bruno2018} en \textc
 
 
 Eerst zal er een literatuurstudie gedaan worden naar de werking van de Garbage Collectors, de theoretische algoritmen waarop ze steunen, de verschillende fases in Garbage Collection, de algemene kenmerken en de individuele verschillen van de gekozen Garbage Collectors.
-De Garbage Collectors zullen gekozen worden aan de hand van bepaalde criteria, namelijk de leeftijd, de beherende organisatie waarvan het afkomstig is, de al dan niet al onderzochte prestatie.
+De Garbage Collectors zullen gekozen worden aan de hand van bepaalde criteria, namelijk de leeftijd, de beherende organisatie waarvan het afkomstig is, en de al dan niet al onderzochte prestatie.
+
+Vervolgens zullen we enkele Java benchmarks uitvoeren op mainframe en niet-mainframe, deze zullen ons met data over de Garbage Collection geven, zoals het geheugengebruik en de duur van tijd er gepauzeerd wordt voor Garbage Collection.
+
+Eens we deze benchmarks hebben uitgevoerd zullen we over alle nodige data beschikken om onze onderzoek naar de Garbage Collection prestaties uit te voeren.
+We zullen de verschillende Garbage Collection algoritmes vergelijken, hun correlatie tussen mainframe en niet-mainframe, en de invloed van de verschillende parameters die we hebben aangepast
+Aan de hand hiervan kunnen we een conclusie bekomen.
 
 De DaCapo\footnote{https://dacapo-bench.org/} benchmark suite geeft ons de mogelijkheid om enkele real-world Java applicaties te gebruiken.
 Aan de hand van deze applicaties is het mogelijk om een grote waaier van verschillende use cases te vergelijken.
-Deze applicaties krijgen telkens via de applicatie zelve dezelfde input, dit zorgt ervoor dat er geen menselijke input verwacht wordt waardoor er mogelijks niet objectieve metingen ontstaan.
+Deze applicaties krijgen telkens via de applicatie zelve dezelfde input, dit zorgt ervoor dat er geen menselijke input verwacht wordt waardoor er mogelijk niet objectieve metingen ontstaan.
 Door dezelfde applicaties op mainframe en niet mainframe te gebruiken kunnen we de migratie van programma's naar mainframe simuleren.
 We zullen de Java applicaties begrenzen door verschillende parameters mee te geven, zoals \textit{-Xss} voor de stack size te bepalen.
 Hierdoor garanderen we dat de uitvoering van de programma's op mainframe en niet mainframe niet beïnvloed wordt door verschillen in de capaciteit van de systemen.
@@ -117,6 +123,8 @@ Met Visual VM\footnote{https://visualvm.github.io/} en de Visual GC plugin is he
 
 De IBM health monitor kan ons ook voorzien van metrieken omtrent de garbage collection, zoals het gebruik van de heap geheugen en de tijdsduur van het pauzeren. 
 
+
+
 %Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor literatuurstudie, interviews met belanghebbenden (bv.~voor requirements-analyse), experimenten, simulaties, vergelijkende studie, risico-analyse, PoC, \ldots?
 
 %Valt je onderwerp onder één van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
@@ -133,23 +141,30 @@ De IBM health monitor kan ons ook voorzien van metrieken omtrent de garbage coll
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
 
-Er wordt verwacht dat de IBM Pause-less Garbage Collector over het algemeen de beste optie is voor Java op mainframe.
+IBM heeft specifiek voor mainframe de  Pause-less Garbage Collection algoritme ontwikkeld, hierdoor kunnen we verwachten dat deze algoritme dan ook de meest optimale resultaten zal leveren, in vergelijking met de niet-mainframe specifieke algoritmen.
+De conclusie van dit onderzoek zal uitwijzen als dit inderdaad zo is, of als er toch andere algoritmes beter presteren.
+
 Er wordt ook verwacht dat verdere manipulatie van de Garbage Collector via parameter aanpassingen kan leiden tot een betere prestatie voor de applicaties.
-Alsook wordt er verwacht dat er een correlatie is tussen de meest optimale Garbage Collector voor mainframe en voor niet mainframe.
+Alsook wordt er verwacht dat er een correlatie is tussen de meest optimale Garbage Collector voor mainframe en voor niet mainframe, bepaalde Garbage Collectors die voor bepaalde Java applicaties op niet-mainframe de meest optimale resultaat geven worden verwacht om overeen te komen met bepaalde Garbage Collectors op mainframe.
+
+De uiteindelijke conclusie van het onderzoek zal aantonen welke Garbage Collection algoritme voor welke use case het meest optimale resultaat zal leveren.
+Dit onderzoek zal meerwaarde bieden aan bedrijven of personen die Java programma's wensen te migreren naar mainframe, of Java programma's van mainframe naar niet mainframe willen migreren.
+Alsook zal het meerwaarde bieden voor het optimaliseren van de Garbage Collection van huidige Java programma's op mainframe.
 
 \vspace{\baselineskip}
 
 \begin{graph1section}
-    Verwachte resultaten van de totale Pause time van bepaalde Garbage Collectors voor enkele DaCapo benchmark applications:
-    \begin{figure}[h]
+    \caption{Simulaties van verwachte resultaten van de totale Pause time van bepaalde Garbage Collectors en de gebruikte geheugen op piekmoment voor enkele DaCapo benchmark applicaties:}
+    \begin{figure}[hbt!]
         \centering
         \includegraphics[width=1\columnwidth]{img/graph2.png}
     \end{figure}
 \end{graph1section}
 
+
 \begin{graph2section}
-    Verwachte resultaten van de gebruikte geheugen op piekmoment voor bepaalde Garbage Collectors voor enkele DaCapo benchmark applications:
-    \begin{figure}[h]
+%    \caption{Simulatie van verwachte resultaten van de gebruikte geheugen op piekmoment voor bepaalde Garbage Collectors voor enkele DaCapo benchmark applicaties:}
+    \begin{figure}[hbt!]
         \centering
         \includegraphics[width=1\columnwidth]{img/graph3.png}
     \end{figure}
