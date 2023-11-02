@@ -7,12 +7,71 @@
 
 % Pas na deze inleidende paragraaf komt de eerste sectiehoofding.
 
-Dit hoofdstuk bevat je literatuurstudie. De inhoud gaat verder op de inleiding, maar zal het onderwerp van de bachelorproef *diepgaand* uitspitten. De bedoeling is dat de lezer na lezing van dit hoofdstuk helemaal op de hoogte is van de huidige stand van zaken (state-of-the-art) in het onderzoeksdomein. Iemand die niet vertrouwd is met het onderwerp, weet nu voldoende om de rest van het verhaal te kunnen volgen, zonder dat die er nog andere informatie moet over opzoeken \autocite{Pollefliet2011}.
+%Dit hoofdstuk bevat je literatuurstudie. De inhoud gaat verder op de inleiding, maar zal het onderwerp van de bachelorproef *diepgaand* uitspitten. De bedoeling is dat de lezer na lezing van dit hoofdstuk helemaal op de hoogte is van de huidige stand van zaken (state-of-the-art) in het onderzoeksdomein. Iemand die niet vertrouwd is met het onderwerp, weet nu voldoende om de rest van het verhaal te kunnen volgen, zonder dat die er nog andere informatie moet over opzoeken \autocite{Pollefliet2011}.
 
-Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz.\ naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\LaTeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin (narratieve referentie), gebruik je \texttt{$\backslash${}textcite\{\}}. Soms is de auteursnaam niet expliciet een onderdeel van de zin, dan gebruik je \texttt{$\backslash${}autocite\{\}} (referentie tussen haakjes). Dit gebruik je bv.~bij een citaat, of om in het bijschrift van een overgenomen afbeelding, broncode, tabel, enz. te verwijzen naar de bron. In de volgende paragraaf een voorbeeld van elk.
+%Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz.\ naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\LaTeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin (narratieve referentie), gebruik je \texttt{$\backslash${}textcite\{\}}. Soms is de auteursnaam niet expliciet een onderdeel van de zin, dan gebruik je \texttt{$\backslash${}autocite\{\}} (referentie tussen haakjes). Dit gebruik je bv.~bij een citaat, of om in het bijschrift van een overgenomen afbeelding, broncode, tabel, enz. te verwijzen naar de bron. In de volgende paragraaf een voorbeeld van elk.
 
-\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
+%\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
 
-Let er ook op: het \texttt{cite}-commando voor de punt, dus binnen de zin. Je verwijst meteen naar een bron in de eerste zin die erop gebaseerd is, dus niet pas op het einde van een paragraaf.
+%Let er ook op: het \texttt{cite}-commando voor de punt, dus binnen de zin. Je verwijst meteen naar een bron in de eerste zin die erop gebaseerd is, dus niet pas op het einde van een paragraaf.
 
-\lipsum[7-20]
+\section{Garbage Collection}
+\label{sec:Garbage collection}
+
+
+\section{Java geheugenbeheer}
+\label{sec:java geheugenbeheer}
+Vooraleer we de implementatie van Garbage Collection in Java bespreken, is het noodzakelijk om een goed beeld te krijgen hoe Java het geheugengebruik beheert.
+Java code wordt gecompileerd naar een .class file, deze bestaat uit '\textit{bytecode}', deze wordt geïnterpreteerd door de '\textit{Java Virtual Machine}' en omgevormd naar \textit{machine code}, dit is code die de processor kan interpreteren en uitvoeren.
+
+De JVM zorgt ook voor het beheer van het geheugengebruik, de \textit{runtime data area} is een onderdeel van de .class file, die de JVM gebruikt om geheugen te beheren die nodig is voor klassen data, geheugen toekenning, en uit te voeren instructies.\autocite{Putten2022}
+Er zijn voornamelijk 3 onderdelen van deze runtime data area, namelijk;
+
+    \subsection{Stack}
+    \label{sec:Stack}
+    
+    De stack houdt oftewel een primitieve variabele vast, of een referentie.
+    Een primitieve variabele kan bijvoorbeeld een \textit{integer} zijn met een bepaalde numerieke waarde.
+    Een referentie is een pointer naar een bepaalde \textit{memory address}, dit komt overeen met een fysieke locatie in het geheugen.\autocite{Huck1993}
+    Er zijn 4 soorten referenties, namelijk;
+    \begin{enumerate}
+        \item Klasse referenties
+        \item Array referenties
+        \item Interface referenties
+        \item Null
+    \end{enumerate}
+    Klasse referenties houden een verwijzing naar de adres van een object op de heap geheugen, objecten worden in de heap geheugen opgeslagen.
+    Array referenties verwijzen naar arrays
+    Wanneer een referentie null is betekent het dat de referentie naar niets meer verwijst.
+    %Per thread wordt er een stack gecreëerd !!TODO!! %TODO
+    
+    %https://jcp.org/aboutJava/communityprocess/maintenance/jsr924/JVMS-SE5.0-Ch3-Overview.pdf
+    %TODO Hoe in bibliografie zetten?
+    \subsection{Heap}
+    \label{sec:heap}
+    Volgens \textcite{Grgic2018} wordt de heap aangemaakt door de JVM bij het opstarten van de Java programma, de heap heeft geheugenposities die gebruikt worden om geheugen toe te wijzen aan arrays en instanties van klassen, ook bekend als objecten.
+    Alsook kan een geheugenpositie in de heap leeg zijn.
+    
+    De heap is een array van geheugen posities die oftewel niets oftewel een object bevatten.
+    Een object is een aaneengesloten reeks van geheugenposities, het wordt zelf onderverdeeld in velden die een primitieve type kunnen bevatten of een referentie.
+    Deze referentie kan een pointer zijn naar een ander object in de heap geheugen, of null zijn.\autocite{Bruno2018}
+    \subsection{Metaspace}
+    \label{sec:Metaspace}
+    De Metaspace bevat metadata over klassen.
+    Wanneer er een object wordt aangemaakt waarvan er nog geen objecten van die klasse bestaan, moet er metadata over de klasse voorzien worden in de Metaspace, de Class Loader zorgt hiervoor.
+    
+    De Class Loader is een object in de heap, deze bevat referenties naar de metadata over de klasse, deze metadata bindt zich in de Metaspace geheugen, er is niet 1 Class Loader, er bestaan verschillende Class Loaders, de bootstrap class loader, voor andere class loaders aan te maken, en de applicatie class loader, voor de root klasse van de applicatie, houden metadata die permanent in de Metaspace verblijft.
+    
+    Dynamische class loaders zorgen voor de metadata van klassen van objecten die door de programma gecreëerd worden, de metadata hiervan verblijft niet noodzakelijk permanent in de Metaspace.
+    \autocite{Putten2022}
+    \subsection{Garbage Collection}
+    \label{sec:garbage collection}
+    Garbage Collection in Java bevrijdt geheugen uit zowel de heap als Metaspace.
+\section{Mainframe}
+\label{sec:mainframe}
+    \subsection{Mainframe introductie}
+    \label{sec:mainframe introductie}
+    \subsection{Java}
+    \label{sec:mainframe java}
+    \subsection{Garbage Collection}
+    \label{sec:mainframe garbage collection}

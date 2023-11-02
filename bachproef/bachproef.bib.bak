@@ -67,7 +67,7 @@
   year    = {2018},
 }
 
-@InProceedings{Pufek2019,
+@InProceedings{8756844,
   author    = {Pufek, P. and Grgić, H. and Mihaljević, B.},
   booktitle = {2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
   title     = {Analysis of Garbage Collection Algorithms and Memory Management in Java},
