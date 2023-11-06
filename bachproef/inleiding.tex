@@ -5,7 +5,7 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-%De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zodat de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
+%De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zit de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
 
 \begin{itemize}
   \item context, achtergrond
@@ -23,17 +23,29 @@
 %Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde heeft voor een concrete doelgroep. De doelgroep moet goed gedefinieerd en afgelijnd zijn. Doelgroepen als ``bedrijven,'' ``KMO's'', systeembeheerders, enz.~zijn nog te vaag. Als je een lijstje kan maken van de personen/organisaties die een meerwaarde zullen vinden in deze bachelorproef (dit is eigenlijk je steekproefkader), dan is dat een indicatie dat de doelgroep goed gedefinieerd is. Dit kan een enkel bedrijf zijn of zelfs één persoon (je co-promotor/opdrachtgever).
 
 
+\let\oldquote\quote
+\let\endoldquote\endquote
+\renewenvironment{quote}[2][]
+{\if\relax\detokenize{#1}\relax
+    \def\quoteauthor{#2}%
+    \else
+    \def\quoteauthor{#2~---~#1}%
+    \fi
+    \oldquote}
+{\par\nobreak\smallskip\hfill(\quoteauthor)%
+    \endoldquote\addvspace{\bigskipamount}}
+
 Bedrijven die gebruik maken van een mainframe kunnen baat hebben bij het maken van Java programma's voor mainframe, of het migreren van bestaande Java programma's naar mainframe.
 Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn:
     \begin{itemize}
     \item Een mainframe is gemaakt om zeer veel transacties te kunnen verwerken, Java programma's die grote hoeveelheden data moeten verwerken kunnen baat hebben door het gebruik maken van de kracht van de mainframe.
-    \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes, zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder \textit{Fred Brooks} als;
-    \begin{quote}
+    \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes, zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder als;
+    \begin{quote}{Fred Brooks}
         Job Control Language is the worst programming language ever designed anywhere by anybody for any purpose.
     \end{quote}}
     Het behouden van deze technologieën is noodzakelijk omdat de mainframe compatibel moet blijven met oude programma's, zonder dat die aangepast moeten worden.
     Hierdoor stellen bedrijven vast dat er moeite is om nieuwe werkkracht te vinden die met deze technologieën en talen bekend zijn, daardoor is het interessant om Java programma's op mainframe te gebruiken omdat een breder deel van de arbeidsmarkt hierin bekwaam is. 
-    \item Java programma's die op mainframe draaien worden via de zIIP processor verwerkt, dit brengt ook enkele voordelen, deze onderwerp zal verbreed worden in de literatuurstudie.
+    \item Java programma's die op mainframe draaien worden via de zIIP processor verwerkt, dit brengt ook enkele voordelen, dit onderwerp zal verbreed worden in de literatuurstudie.
  \end{itemize}
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}

@@ -67,12 +67,29 @@
   year    = {2018},
 }
 
-@InProceedings{8756844,
+@InProceedings{Pufek2019,
   author    = {Pufek, P. and Grgić, H. and Mihaljević, B.},
   booktitle = {2019 42nd International Convention on Information and Communication Technology, Electronics and Microelectronics (MIPRO)},
   title     = {Analysis of Garbage Collection Algorithms and Memory Management in Java},
   doi       = {10.23919/MIPRO.2019.8756844},
   pages     = {1677-1682},
+  year      = {2019},
+}
+
+@Article{Byers2007,
+  author  = {Byers, Rick},
+  date    = {2007},
+  title   = {Garbage Collection Algorithms},
+  comment = {CSEP 521},
+}
+
+@Misc{VanderCruysse2019,
+  author    = {Van der Cruysse, Jonathan and De Sutter, Bjorn},
+  title     = {Garbage collection abstractions for high-level GPU languages},
+  language  = {und},
+  url       = {http://lib.ugent.be/catalog/rug01:002785863},
+  abstract  = {Master of Science in Computer Science Engineering},
+  publisher = {2019.},
   year      = {2019},
 }
 
