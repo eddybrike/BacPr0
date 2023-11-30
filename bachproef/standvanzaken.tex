@@ -17,7 +17,7 @@
 
 \section{Garbage Collection}
 \label{sec:Garbage collection}
-Geheugenbeheer is een brede onderdeel van de computerwetenschap, er is al veel onderzoek naar
+Geheugenbeheer is een brede onderdeel van de computerwetenschap, er is al veel onderzoek naar gemaakt, hoe efficiënter een programma gebruik kan maken van geheugen, oftewel hoe weinig mogelijk geheugen de programma moet gebruiken om te te functioneren hoe beter.
 Garbage Collection is het automatisch beheren van het geheugen van een programma zodanig dat alloceerde geheugen die niet meer gebruikt wordt terug opgeruimd kan worden zodanig dat er geheugen terug vrij komt.
 
 Meeste programmeertalen maken vandaag de dag gebruik van een \textit{heap}, in het algemeen kunnen we dit voorstellen als een gerichte graaf met knopen, of \textit{objecten}, met een \textit{root} object dat als vertrekpunt gebruikt wordt.
@@ -31,16 +31,25 @@ Dit wordt een \textit{dode cykel} genoemd.\autocite{VanderCruysse2019}
 Knopen die vanuit de root niet meer bereikbaar zijn kunnen ook niet meer door het programma gebruikt worden, het is niet alleen onnodig dat deze knopen nog blijven bestaan, maar zelfs nadelig aangezien zij wel nog steeds geheugen gebruiken.
 Onbereikbare objecten, worden 'dood' genoemd, knopen die nog steeds bereikbaar zijn worden 'levend' genoemd.
 Tracing Garbage Collectors gaan dus te werk door alle objecten die niet bereikbaar zijn vanuit de root te vinden. 
+Het nadeel aan deze werkwijze is dat Tracing Garbage Collectors gebruik maken van ``\textit{Stop-the-world events}'', ze pauzeren de threads van de programma om aan Garbage Collection te kunnen doen.
 
 Binnen de Tracing Garbage Collectors zijn er verschillende manieren, of algoritmes, om te bepalen welke delen van het geheugen opgeruimd mogen worden.
 De voornaamste zijn namelijk;
-    \subsection{Mark/Sweep}
-    
-    
-    Deze Garbage Collection algoritme wordt door Java gebruikt, de exacte implementatie ervan in Java zal verder in de literatuurstudie dieper beschreven worden.
-    %TODO \subsection{title}
-    
-    
+\subsection{Mark/Sweep}
+\textit{Mark and Sweep} Collectors gaan te werk aan de hand van een pad door alle bereikbare objecten te banen, startend vanuit de root object. De bezochte objecten worden ook gemarkeerd, eens de markering fase voorbij is kunnen alle objecten die niet gemarkeerd zijn verwijderd worden, aangezien zij niet meer bereikbaar zijn vanuit de root en geen waarde meer voor de programma zijn.
+%TODO \subsection{title}
+
+
+\subsection{Generational}
+\label{sec:generational}    
+Generationele Garbage Collectors gaan uit van de principe dat objecten die recenter aangemaakt zijn meer kans hebben om dode objecten te zijn dan objecten die al lang levend zijn.
+Deze Garbage Collectors verdelen de heap dan ook in generaties, objecten beginnen in de jongste generatie en naarmate ze levend blijven doorheen Garbage Collection kunnen ze naar oudere generaties gepromoveerd worden.
+Dit laat toe dat deze Garbage Collectors niet elke keer ook in de oudste generaties Garbage Collection gaan doen, hierdoor heeft de Garbage Collection minder \textit{overhead}. %TODO leg overhead uit (minder gehuegen nodig voor programma....)
+
+
+\subsection{Semi-Space}
+\label{sec:semi-space}    
+
 \section{Java geheugenbeheer}
 \label{sec:java geheugenbeheer}
 Vooraleer we de implementatie van Garbage Collection in Java bespreken, is het noodzakelijk om een goed beeld te krijgen hoe Java het geheugengebruik beheert.
@@ -49,60 +58,89 @@ Java code wordt gecompileerd naar een .class file, deze bestaat uit '\textit{byt
 De JVM zorgt ook voor het beheer van het geheugengebruik, de \textit{runtime data area} is een onderdeel van de .class file, die de JVM gebruikt om geheugen te beheren die nodig is voor klassen data, geheugen toekenning, en uit te voeren instructies.\autocite{Putten2022}
 Er zijn voornamelijk 3 onderdelen van deze runtime data area;
 
-    \subsection{Stack}
-    \label{sec:Stack}
-    
-    De stack houdt oftewel een primitieve variabele vast, of een referentie.
-    Een primitieve variabele kan bijvoorbeeld een \textit{integer} zijn met een bepaalde numerieke waarde.
-    Een referentie is een pointer naar een bepaalde \textit{memory address}, dit komt overeen met een fysieke locatie in het geheugen.\autocite{Huck1993}
-    Er zijn 4 soorten referenties, namelijk;
-    \begin{enumerate}
-        \item Klasse referenties
-        \item Array referenties
-        \item Interface referenties
-        \item Null
-    \end{enumerate}
-    Klasse referenties houden een verwijzing naar de adres van een object op de heap geheugen, objecten worden in de heap geheugen opgeslagen.
-    Array referenties verwijzen naar arrays
-    Wanneer een referentie null is betekent het dat de referentie naar niets meer verwijst.
-    %Per thread wordt er een stack gecreëerd !!TODO!! %TODO
-    
-    %https://jcp.org/aboutJava/communityprocess/maintenance/jsr924/JVMS-SE5.0-Ch3-Overview.pdf
-    %TODO Hoe in bibliografie zetten?
-    \subsection{Heap}
-    \label{sec:heap}
-    Volgens \textcite{Grgic2018} wordt de heap aangemaakt door de JVM bij het opstarten van de Java programma, de heap heeft geheugenposities die gebruikt worden om geheugen toe te wijzen aan arrays en instanties van klassen, ook bekend als objecten.
-    Alsook kan een geheugenpositie in de heap leeg zijn.
-    
-    De heap is een array van geheugen posities die oftewel niets oftewel een object bevatten.
-    Een object is een aaneengesloten reeks van geheugenposities, het wordt zelf onderverdeeld in velden die een primitieve type kunnen bevatten of een referentie.
-    Deze referentie kan een pointer zijn naar een ander object in de heap geheugen, of null zijn.\autocite{Bruno2018}
-    \subsection{Metaspace}
-    \label{sec:Metaspace}
-    De Metaspace bevat metadata over klassen.
-    Wanneer er een object wordt aangemaakt waarvan er nog geen objecten van die klasse bestaan, moet er metadata over de klasse voorzien worden in de Metaspace, de Class Loader zorgt hiervoor.
-    
-    De Class Loader is een object in de heap, deze bevat referenties naar de metadata over de klasse, deze metadata bindt zich in de Metaspace geheugen.
-    Er is niet maar 1 Class Loader, er bestaan verschillende Class Loaders, de bootstrap class loader voor andere class loaders aan te maken, en de applicatie class loader voor de root klasse van de applicatie, deze houden metadata die permanent in de Metaspace verblijft.
-    
-    Verder zijn er nog Dynamische class loaders, zij zorgen voor de metadata van klassen van objecten die door het programma gecreëerd worden, de metadata hiervan verblijft niet noodzakelijk permanent in de Metaspace.
-    \autocite{Putten2022}
-    \subsection{Garbage Collection}
-    \label{sec:garbage collection}
-    Garbage Collection in Java bevrijdt geheugen uit zowel de heap als Metaspace.
-    Wanneer een object in de heap bestaat maar er geen verwijzingen meer naar toe zijn in de stack geheugen wordt het object als 'dood' beschouwd, het mag verwijderd worden zodanig dat het verbruikte geheugen terug vrij komt.
-    Als er geen objecten meer bestaan in de heap waarvan de Object Loader referenties naar de klasse metadata in de metaspace bezit, kan de Object Loader ook uit de heap verwijdert worden.
-    Indien dit zo is, zijn er klasse metadata in de metaspace waar er geen Object Loaders naar toe verwijzen, deze kunnen dan ook opgeruimd worden. \autocite{Putten2022}
-    
-    Garbage collectors bepalen wat 'levend' en wat 'dood' is door vanuit de stack vertrekkende een pad te banen naar alle referentie %TODO
-    al hetgeen dat niet gemarkeerd is mag opgeruimd worden aangezien het programma er niet maar aan kan, en het dus geen nut meer heeft om verder te bestaan.
-    %TODO: pg 60 in Putten2022,  phases!!!!!!!!!!!!!!!!!!!
+\subsection{Stack}
+\label{sec:Stack}
+
+De stack houdt oftewel een primitieve variabele vast, of een referentie.
+Een primitieve variabele kan bijvoorbeeld een \textit{integer} zijn met een bepaalde numerieke waarde.
+Een referentie is een pointer naar een bepaalde \textit{memory address}, dit komt overeen met een fysieke locatie in het geheugen.\autocite{Huck1993}
+Er zijn 4 soorten referenties, namelijk;
+\begin{enumerate}
+    \item Klasse referenties
+    \item Array referenties
+    \item Interface referenties
+    \item Null
+\end{enumerate}
+Klasse referenties houden een verwijzing naar de adres van een object op de heap geheugen, objecten worden in de heap geheugen opgeslagen.
+Array referenties verwijzen naar arrays
+Wanneer een referentie null is betekent het dat de referentie naar niets meer verwijst.
+%Per thread wordt er een stack gecreëerd !!TODO!! %TODO
+
+%https://jcp.org/aboutJava/communityprocess/maintenance/jsr924/JVMS-SE5.0-Ch3-Overview.pdf
+%TODO Hoe in bibliografie zetten?
+\subsection{Heap}
+\label{sec:heap}
+Volgens \textcite{Grgic2018} wordt de heap aangemaakt door de JVM bij het opstarten van de Java programma, de heap heeft geheugenposities die gebruikt worden om geheugen toe te wijzen aan arrays en instanties van klassen, ook bekend als objecten.
+Alsook kan een geheugenpositie in de heap leeg zijn.
+
+De heap is een array van geheugen posities die oftewel niets oftewel een object bevatten.
+Een object is een aaneengesloten reeks van geheugenposities, het wordt zelf onderverdeeld in velden die een primitieve type kunnen bevatten of een referentie.
+Deze referentie kan een pointer zijn naar een ander object in de heap geheugen, of null zijn.\autocite{Bruno2018}
+\subsection{Metaspace}
+\label{sec:Metaspace}
+De Metaspace bevat metadata over klassen.
+Wanneer er een object wordt aangemaakt waarvan er nog geen objecten van die klasse bestaan, moet er metadata over de klasse voorzien worden in de Metaspace, de Class Loader zorgt hiervoor.
+
+De Class Loader is een object in de heap, deze bevat referenties naar de metadata over de klasse, deze metadata bindt zich in de Metaspace geheugen.
+Er is niet maar 1 Class Loader, er bestaan verschillende Class Loaders, de bootstrap class loader voor andere class loaders aan te maken, en de applicatie class loader voor de root klasse van de applicatie, deze houden metadata die permanent in de Metaspace verblijft.
+
+Verder zijn er nog Dynamische class loaders, zij zorgen voor de metadata van klassen van objecten die door het programma gecreëerd worden, de metadata hiervan verblijft niet noodzakelijk permanent in de Metaspace.
+\autocite{Putten2022}
+\subsection{Garbage Collection}
+\label{sec:garbage collection}
+Garbage Collection in Java bevrijdt geheugen uit zowel de heap als Metaspace.
+Wanneer een object in de heap bestaat maar er geen verwijzingen meer naar toe zijn in de stack geheugen wordt het object als 'dood' beschouwd, het mag verwijderd worden zodanig dat het verbruikte geheugen terug vrij komt.
+Als er geen objecten meer bestaan in de heap waarvan de Object Loader referenties naar de klasse metadata in de metaspace bezit, kan de Object Loader ook uit de heap verwijdert worden.
+Indien dit zo is, zijn er klasse metadata in de metaspace waar er geen Object Loaders naar toe verwijzen, deze kunnen dan ook opgeruimd worden. \autocite{Putten2022}
+
+Garbage collectors bepalen wat 'levend' en wat 'dood' is door vanuit de stack vertrekkende een pad te banen naar alle referentie %TODO
+al hetgeen dat niet gemarkeerd is mag opgeruimd worden aangezien het programma er niet maar aan kan, en het dus geen nut meer heeft om verder te bestaan.
+%TODO: pg 60 in Putten2022,  phases!!!!!!!!!!!!!!!!!!!
 \section{Mainframe}
 \label{sec:mainframe}
-    \subsection{Mainframe introductie}
-    \label{sec:mainframe introductie}
-    \subsection{Java}
-    \label{sec:mainframe java}
-    
-    \subsection{Garbage Collection}
-    \label{sec:mainframe garbage collection}
+\subsection{Mainframe introductie}
+\label{sec:mainframe introductie}
+
+Vandaag de dag domineert IBM de mainframe wereld, met een marktaandeel van zelfs 80 procent %todo is dit accuraat? 
+
+\subsection{Java}
+\label{sec:mainframe java}
+Java voor mainframes, specifiek voor IBM z-system mainframes %todo
+
+
+\subsection{Garbage Collection}
+\label{sec:mainframe garbage collection}
+Garbage Collection op mainframe verloopt gelijkaardig als Garbage Collection op niet-mainframe.
+IBM heeft wel een Pause-less Garbage Collection algoritme ontworpen.
+Deze algoritme is geen Garbage Collector an sich, maar een hulp voor de Gencon Garbage Collection policy, meegeleverd in de Openj9 VM.
+
+De Gencon Garbage Collection gaat zo te werk;
+De Java heap wordt onderverdeeld in twee regio's, de \textit{tenure} en \textit{nursery} regio.
+De nursery regio is de regio waarin nieuwe objecten opgeslagen worden.
+De tenure regio is de regio waar objecten naar toe worden verplaatst eens zijn de tenure leeftijd hebben bereikt, oftewel een voor gedefinieerde aantal Garbage Collection /%TODO cykels overleefd?
+
+\begin{enumerate}
+    \item Objecten worden in de \textit{allocate space} aangemaakt.
+    \item De allocate space wordt opgevuld en er is geen voldoende geheugen voor nieuwe objecten op te slaan.
+    \item Er wordt een lokale \textit{scavenge process} gestart en de bereikbare, of levende, objecten worden naar de survivor space vanuit de allocate space gekopieerd, indien de object de tenure age bereikt heeft, wordt die naar de tenure space gekopieerd.
+    \item De allocate space wordt de survivor space an de survivor space wordt de allocate space.
+     Dit betekend dat de allocate space nu de objecten bevat die levend zijn maar nog niet de tenure age bereikt hadden,
+     de surivor space is nu terug leeg sinds de allocate space tijden de scavenge operation volledig leeg gemaakt werdt. %todo werd met dt of niet?
+\end{enumerate}
+
+De \textit{Concurrent Scavenge} is een modus voor de gencon Garbage Collection policy, deze modus maakt gebruik van de IBM Pause-less algoritme. Deze modus zorgt ervoor dat het mogelijk is om Garbage Collection uit te voeren terwijl de  applicatie threads blijven door werken.
+De IBM Pauseless Garbage Collection maakt gebruik van de \textit{Gaurded Storage facility}, dit is een specifiek stuk hardware die vanaf de IBM Z-14 model mainframe uit 2017 aanwezig is,
+
+
+\section{Vroegere onderzoek}
+\label{sec:vroegereonderzoek}
