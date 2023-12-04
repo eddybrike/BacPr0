@@ -83,7 +83,7 @@
   comment = {CSEP 521},
 }
 
-@Misc{VanderCruysse2019,
+@MastersThesis{VanderCruysse2019,
   author    = {Van der Cruysse, Jonathan and De Sutter, Bjorn},
   title     = {Garbage collection abstractions for high-level GPU languages},
   language  = {und},
@@ -91,6 +91,13 @@
   abstract  = {Master of Science in Computer Science Engineering},
   publisher = {2019.},
   year      = {2019},
+}
+
+@Article{Critchley2021,
+  author       = {Terry Critchley},
+  date         = {2021-06-01},
+  journaltitle = {Planet Mainframe},
+  title        = {The Mainframe Lives and Thrives: The Proof},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}
