@@ -24,6 +24,7 @@ Alsook zou het mogelijk zijn dat zonder Garbage Collection er op een bepaald pun
 
 Meeste programmeertalen maken vandaag de dag gebruik van een \textit{heap}, in het algemeen kunnen we dit voorstellen als een gerichte graaf met knopen, of \textit{objecten}, met een \textit{root} object dat als vertrekpunt gebruikt wordt.
 
+
 \textit{Reference Counting} Garbage Collectors maken gebruik van een referentie teller voor elke object, dit betekent dat er per object een teller is die incrementeel stijgt voor elke referentie naar dat object.
 Als de teller op 0 staat betekend dit dat er geen referenties meer zijn naar naar dat object, deze object mag dan  opgeruimd worden.
 Het nadeel van deze implementatie is dat er een mogelijkheid bestaat dat 2 objecten alleen nog maar met elkaar een referentie hebben, de teller zal dan niet op 0 staan maar de objecten zijn niet meer bereikbaar voor het programma en moeten dus wel opgeruimd worden.
@@ -157,9 +158,7 @@ De gebruikte vorm van Sweeping is afhankelijk van de gebruikte Garbage Collector
 
 In de simpelste term is een een mainframe een computer, hij bewaart en verwerkt data, en voert instructies uit.
 In deze onderzoek zal de mainframe gelijkgesteld worden met de IBM Z-model mainframes, deze series van mainframe modellen zijn hedendaags de leiders in de mainframe wereld, een overgrote meerderheid van bedrijven die gebruik maken van mainframes maken gebruik van IBM Z-model mainframes.
-Mainframes zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, ze benaderen een 99.999%todo
-Mainframes 
-Volgens \textcite{Critchley2021} worden er per dag 30 miljard transacties op mainframes uitgevoerd, alsook maken %todod
+Mainframes zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, volgens \textcite{Critchley2021} worden er per dag 30 miljard transacties op mainframes uitgevoerd, alsook maken %todod
 
 
 
@@ -173,8 +172,8 @@ Doordat Java zo ontworpen is dat de Java Virtual Machine de gecompileerde .class
 \subsection{Garbage Collection}
 \label{sec:mainframe garbage collection}
 Garbage Collection op mainframe verloopt gelijkaardig als Garbage Collection op niet-mainframe.
-IBM heeft wel een Pause-less Garbage Collection algoritme ontworpen.
-Deze algoritme is geen Garbage Collector an sich, maar een hulp voor de Gencon Garbage Collection policy, meegeleverd in de Openj9 VM.
+IBM heeft wel een Pause-less Garbage Collection algoritme specifiek voor mainframe ontworpen.
+Deze algoritme is geen Garbage Collector an sich, maar een hulpmiddel voor de Gencon Garbage Collection policy, meegeleverd in de OpenJ9 VM.
 
 
 De Gencon Garbage Collection gaat zo te werk;
@@ -188,7 +187,7 @@ De tenure regio is de regio waar objecten naar toe worden verplaatst eens zij de
     \item Er wordt een lokale \textit{scavenge process} gestart en de bereikbare, of levende, objecten worden naar de survivor space vanuit de allocate space gekopieerd, indien de object de tenure age bereikt heeft, wordt die naar de tenure space gekopieerd.
     \item De allocate space wordt de survivor space an de survivor space wordt de allocate space.
      Dit betekend dat de allocate space nu de objecten bevat die levend zijn maar nog niet de tenure age bereikt hadden,
-     de surivor space is nu terug leeg sinds de allocate space tijden de scavenge operation volledig leeg gemaakt werd.
+     de surivor space is nu opnieuw leeg sinds de allocate space tijden de scavenge operation volledig leeg gemaakt werd.
 \end{enumerate}
 
 De \textit{Concurrent Scavenge} is een modus voor de gencon Garbage Collection policy, deze modus maakt gebruik van de IBM Pause-less algoritme. Deze modus zorgt ervoor dat het mogelijk is om Garbage Collection uit te voeren terwijl de  applicatie threads blijven door werken.
@@ -196,12 +195,59 @@ De IBM Pauseless Garbage Collection maakt gebruik van de \textit{Guarded Storage
 %TODO bron = 51917c6806dc413b949c8c42d71c778b.pdf
 De Guarded Storage Facility maakt het mogelijk om hardware geassisteerde \textit{read barriers} te hebben voor geheugen die in een Garbage Collection event betrokken is. %todo te letterlijk vertaald?
 Wanneer er een pointer vanuit de geheugen wordt geladen, wordt de pointer gecontroleerd op dat het niet Gaurded Storage geheugen aanvraagt die momenteel in een Garbage Collection operation zit.
-Indien dit zo is, zal de control flow hergeleid worden. %todo wat is control flow?
+Indien dit zo is, zal de control flow herleid worden. %todo wat is control flow?
 %todo bron = GSE_201710_IBM_z14-Technical_Overview_Final.pdf
 %TODO %uitleg memory barriers, GSF -> read barriers
 Hierdoor is het mogelijk om Garbage Collection uit te voeren terwijl er parallel ook nog applicatie threads draaien en verder uitgevoerd worden.
 
+%todo: fit dit in hierboven
+Read barriers zijn stukken code die voor elke operatie dat een object aanvraagt uitgevoerd worden om te controleren indien deze object werkelijk in het geheugen zit.
+Een software gebaseerd implementatie hiervan is zeer kostelijk voor de performantie. % bron : Optimizing the Read and Write Barriers for Orthogonal Persistence
 
 
-\section{Vroegere onderzoek}
-\label{sec:vroegereonderzoek}
+De gencon Garbage Collector is niet de enige Garbage Collector waarvan Java programma's op mainframe gebruik kunnen maken, alle Garbage Collectors die op de OpenJ9 VM kunnen werken kunnen dus ook voor Java op mainframe gebruikt worden, maar deze zullen niet gebruik kunnen maken van de Pause-less Garbage Collection, en dus ook niet van de Guarded Storage Facility.
+
+\begin{enumerate}
+    \item \textit{balanced}
+    
+            Het doel van de balanced Garbage Collector is om pauzeertijden gelijkmatig te maken, om te voorkomen dat er onregelmatige lange pauzeertijden zijn, en om de overhead van sommige operaties te verminderen, zoals de compacting die gebruikt wordt.
+            Dit wordt bereikt door de Java heap te onderverdelen in een groot aantal regio's (1.000 - 2.000), deze regio's worden individueel door een generationele Garbage Collector beheerd zodanig dat er geen grootschalige Garbage Collection events nodig zijn.
+            Door deze werkwijze wordt de kans op een \textit{Global} Garbage Collection cycle zeer miniem, Global cycles zijn cycles die over de gehele heap Garbage Collection uitvoeren.
+            %todo beheerd of beheert? of beheerdt
+
+    \item \textit{optavgpause}   
+    
+            De \textit{Optimize for pause time} Garbage Collection policy maakt gebruik van een global Garbage Collection cycle om de heap, die maar 1 regio is, te beheren en compacting uit te voeren.
+            De globale Garbage Collection cycles worden op voorhand geanticipeerd, en er worden al enkele marking operaties uitgevoerd voor dat de Garbage Collection cycle uitgevoerd wordt.
+            Deze Garbage Collector zorgt voor minder pauzeertijden, maar heeft wel een negatieve invloed op de performantie.
+    
+    \item \textit{optthruput}
+    
+            De \textit{Optimize for throughput} Garbage Collection policy maakt ook gebruik van een global Garbage Collection cycle om de heap, die maar 1 regio is, te beheren en compacting uit te voeren.
+            Het verschil met de optavgpause policy is dat de optthruput policy dit enkel doet eens de heap volledig vol is en er een allocation failure wegens te weinig vrije geheugen bij het aanmaken van een nieuw object wordt verkregen.
+            Hierdoor zullen de pauzeertijden langer duren, maar is er een mindere negatieve invloed op de performantie.
+    \item \textit{metronome}
+    
+            De metronome Garbage Collector is een deterministische Garbage Collector, volgens \textcite{Oracle2008} kunnen deterministische Garbage Collectors een maximum duur voor pauzeertijden opstellen, deze leveren korte en voorspelbare Garbage Collection cycles.
+            Deze Garbage Collection policy kan noodzakelijk zijn voor programma's die zeer fijne en precieze tijdsgebonden instructies moeten uitvoeren.
+            
+    \item \textit{nogc}
+    
+            De nogc Garbage Collection policy is een policy dat geen Garbage Collection uitvoert.
+            Geen Garbage Collection uitvoeren kan nuttig zijn voor het testen van bepaalde metrieken, of voor zeer specifieke kleinschalige programma's.
+        
+%todo : bron is ibm website
+
+\end{enumerate}
+
+
+\section{Eerder onderzoek}
+\label{sec:eerderonderzoek}
+Er is al eerder onderzoek gedaan naar Garbage Collection, zowel in het algemene brede domein van de computerwetenschap, zoals onderzoek van \textcite{Dijkstra1978} in verband met het het creëren van een aparte processor voor Garbage Collection, of \textcite{Lieberman1981} voor Garbage Collection die met de leeftijd van objecten rekening houdt.
+
+
+Er is ook al onderzoek gedaan naar Garbage Collection in Java, zoals onderzoeken naar de verschillende invloeden op Garbage Collection performantie van \textcite{Dijkstra1978}, of specifieker voor de performantie van verschillende Garbage Collectors in het onderzoek van \textcite{Grgic2018}.
+
+
+Weliswaar is er nog geen publiekelijk openbaar onderzoek gedaan naar de performantie van Garbage Collection voor Java op mainframe, ook is er nog geen onderzoek naar de .
+Alsook is er nog geen vergelijking gemaakt met de correlatie tussen Garbage Collection op niet-mainframe en op mainframe van dezelfde programma.
