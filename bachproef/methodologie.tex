@@ -5,6 +5,8 @@
 \chapter{\IfLanguageName{dutch}{Methodologie}{Methodology}}%
 \label{ch:methodologie}
 
+
+
 %% TODO: In dit hoofstuk geef je een korte toelichting over hoe je te werk bent
 %% gegaan. Verdeel je onderzoek in grote fasen, en licht in elke fase toe wat
 %% de doelstelling was, welke deliverables daar uit gekomen zijn, en welke
@@ -28,9 +30,324 @@
 
 
 
+%todo ziip<->zaap
+%todo semeru runtime
 
 \chapter{Opstelling}
+\label{ch:opstelling}
+\section{Renaissance benchmark suite}
+Voor de Java programma's maken we gebruik van de \textit{Renaissance benchmark suite}.
+Dit is een collectie van enkele \textit{real-world} Java programma's, hiermee wordt bedoeld dat dit programma's zijn die een degelijke hoeveelheid instructies uitvoeren, en in een werkelijke business context zouden gebruikt kunnen worden. 
+Alsook maken sommige programma's gebruik van bepaalde populaire Java frameworks.
+
+
+Het gebruiken van deze benchmark suite maakt het mogelijk om Garbage Collection data te verzamelen met een grote waaier aan diverse programma's, zodanig dat we een goed beeld krijgen van de invloed van Garbage Collection in verschillende reële situaties.
+Aangezien dat de te draaien benchmark programma's op zowel de mainframe als niet-mainframe systeem dezelfde bewerkingen uitvoeren betekent dit dat er geen invloed op de Garbage Collection zal zijn vanwege een verschil in het programma zelve.
+
+
+De benchmark suite is ook garbage collector agnostisch, de benchmark suite kan met enig gewenste garbage collector policy uitgevoerd worden.
+
+\section{Systeem informatie}
+
+De volgende tabel geeft een overzicht van de specificaties van beide systemen;
+
+\begin{table}[]
+    \caption{systeem informatie}
+    \label{tab:Systeeminformatie}
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        & Mainframe   & Niet-mainframe \\
+        architectuur                                                       & s390x       & amd64          \\
+        CPU's                                                              & 5           & 8              \\
+        \begin{tabular}[c]{@{}l@{}}Operating\\ System\end{tabular}         & z/OS        & Windows 10     \\
+        OS Versie                                                          & 02.04.00    & 10.0           \\
+        \begin{tabular}[c]{@{}l@{}}Fysieke geheugen\\ (bytes)\end{tabular} & 48418689024 & 25716342784    \\ \midrule
+        &             &               
+    \end{tabular}
+\end{table}
 
 \chapter{Uitvoering}
+\label{ch:uitvoering}
+
+Voor de uitvoering zullen we 4 benchmark programma's gebruiken, \textit{akka-uct}, \textit{future-genetic}, \textit{dotty}, \textit{finagle-chirper}.
+
+\section{Parameters}
+Voor het uitvoeren van de benchmarks zullen we enkele Java parameters instellen, namelijk;
+
+\begin{enumerate}
+    
+    \item \textit{-Xms4096m}
+    Deze parameter bepaalt de initiële grootte van de heap, ingezet op 4096 megabyte.
+    
+    
+    \item \textit{-Xmx4096m}
+    De maximale grootte van de heap, gezet op 4096 megabyte.
+    Door de maximale en minimale \textit{heapsize} op dezelfde waarde in te stellen garanderen we dat de heap grootte gelijk blijft, en zo de voorspelbaarheid dan de uitwerking van de programma te vergoten.
+    Dit komt omdat de programma niet meer de heap grootte kan veranderen, indien dit gebeurt is dat een stop-the-world event, door dit te voorkomen kunnen we accurater resultaten bekomen.
+   
+
+    \item \textit{-Xgcpolicy:Y}
+    Dit bepaalt de gekozen Garbage Collection policy, met Y als naam van de policy.
+    
+    \item \textit{-verbose:gc}
+    Deze parameter is nodig om de \textit{logging} van de Garbage Collection werking te verkrijgen.
+    Er worden bepaalde acties en gegevens in verband met de Garbage Collection bijgehouden, zoals onder andere de begin en eindtijden van de pauzeertijden, het aantal globale collecties, de hoeveelheid tijd nodig voor het marken en sweepen.
+    Voor dit onderzoek zullen we de mediaan van de duur van de pauzeertijden, de totale pauzeertijden, de procentuele tijd dat de programma in garbage Collection zit tegenover het uitvoeren van de applicatie,  %todo 
+    
+    
+    \item \textit{-Xgc}
+    Met de xgc parameter is het mogelijk om enkele Garbage Collection opties aan te passen, we zullen deze gebruiken met de concurrentScavenge waarde om Pause-less Garbage Collection aan te zetten voor de gencon policy, en noconcurrentScavenge om Pause-less Garbage Collection uit te zetten.
+    
+    
+    
+    \item \textit{-r}
+    De vorige parameters waren Java parameters, die invloed hadden op de werking van de JVM.
+    Deze parameter is voor de Renaissance benchmark suite zelve, het bepaalt de hoeveelheid keren dat de benchmark programma herhaaldelijk uitgevoerd moet worden.
+    We zullen deze parameter op 25 instellen, dusdanig dat elke benchmark programma per Garbage Collector 25 keer uitgevoerd zal worden.
+    
+\end{enumerate}
+
+%TODO uitvoering via batch job op mainframe, via JCL
+
+\section{Resultaten}
+
+De  volgende tabellen geven een overzicht van de belangrijkste bekomen data van de uitgevoerde benchmark programma's.
+De Garbage Collection logs werden door middel van het IBM programma, \textit{Garbage Collection and Memory Visualizer}, geanalyseerd en vervolgens werd de relevante data hieruit verworven.
+
+
+\begin{table}[]
+    \caption{akka-uct}
+    \label{tab:akka-uct}
+    \begin{tabular}{llrr}
+        \hline
+        &                                                                                & \multicolumn{1}{l}{niet-mainframe} & \multicolumn{1}{l}{mainframe} \\
+        gencon                                                      &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 0,84                               & 1,02                          \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 99,16                              & 98,98                         \\ \cline{3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 53,23                              & 57,96                         \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 8722,58                            & 6662,54                       \\ \cline{3-4} 
+        & Totale pauzetijd (ms)                                                          & 1426                               & 1517                          \\ \hline
+        \begin{tabular}[c]{@{}l@{}}gencon \\ zonder CS\end{tabular} &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 1,88                               & 1,57                          \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 98,12                              & 98,43                         \\ \cline{3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 70,29                              & 65,26                         \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 7172,50                            & 6179,75                       \\ \cline{3-4} 
+        & Totale pauzetijd (ms)                                                          & 713                                & 728                           \\ \hline
+        optavgpause                                                 &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 1,14                               & 1,49                          \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 98,86                              & 98,51                         \\ \cline{3-4} 
+        & Totale pauzetijd (ms)                                                          & 1884                               & 2379                          \\ \hline
+        optthruput                                                  &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 0,95                               & 1,61                          \\ \cline{3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 99,05                              & 98,39                         \\ \cline{3-4} 
+        & Totale pauzetijd (ms)                                                          & 1360                               & 2725                          \\ \hline
+        &                                                                                &                                    &                               \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}         
+    \end{tabular}
+\end{table}
+
+
+\begin{table}[]
+    \caption{future-genetic}
+    \label{tab:future-genetic}
+    \begin{tabular}{@{}llrr@{}}
+        \toprule
+        &                                                                                & \multicolumn{1}{l}{niet-mainframe} & \multicolumn{1}{l}{mainframe} \\
+        gencon                                                      &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 98,99                              & 1,23                          \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 1,01                               & 98,77                         \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 20,24                              & 23,05                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 2139,92                            & 2036,00                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 511                                & 596                           \\ \midrule
+        \begin{tabular}[c]{@{}l@{}}gencon \\ zonder CS\end{tabular} &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 98,94                              & 98,33                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 1,06                               & 1,67                          \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 20,76                              & 29,33                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 2215,50                            & 2078,04                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 561                                & 834                           \\ \midrule
+        optavgpause                                                 &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 81,51                              & 67,35                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 18,49                              & 32,65                         \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 11463                              & 25405                         \\ \midrule
+        optthruput                                                  &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 99,05                              & 98,46                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 0,95                               & 1,54                          \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 473                                & 699                           \\ \midrule
+        &                                                                                &                                    &                               \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}         
+    \end{tabular}
+\end{table}
+
+
+
+\begin{table}[]
+    \caption{dotty}
+    \label{tab:dotty}
+    \begin{tabular}{@{}llrr@{}}
+        \toprule
+        &                                                                                & \multicolumn{1}{l}{niet-mainframe} & \multicolumn{1}{l}{mainframe} \\
+        gencon                                                      &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 99,16                              & 99,13                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 0,84                               & 0,87                          \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 41,03                              & 55,37                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 5070,25                            & 5070,25                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 934                                & 1369                          \\ \midrule
+        \begin{tabular}[c]{@{}l@{}}gencon \\ zonder CS\end{tabular} &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 99,12                              & 99,09                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 0,88                               & 0,91                          \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 39,75                              & 55,88                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 4718,71                            & 6361,67                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 898                                & 1381                          \\ \midrule
+        optavgpause                                                 &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 98,39                              & 98,96                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 1,61                               & 1,04                          \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 1733                               & 1598                          \\ \midrule
+        optthruput                                                  &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 99,06                              & 99,01                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 0,94                               & 0,99                          \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 1037                               & 1643                          \\ \midrule
+        &                                                                                &                                    &                               \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}         
+    \end{tabular}
+\end{table}
+
+
+
+
+
+\begin{table}[]
+    \caption{finagle-chirper}
+    \label{tab:finagle-chirper}
+    \begin{tabular}{@{}llrr@{}}
+        \toprule
+        &                                                                                & \multicolumn{1}{l}{niet-mainframe} & \multicolumn{1}{l}{mainframe} \\
+        gencon                                                      &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 0,84                               & 1,02                          \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 99,16                              & 98,98                         \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 53,23                              & 57,96                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 8722,58                            & 6662,54                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 1426                               & 1517                          \\ \midrule
+        \begin{tabular}[c]{@{}l@{}}gencon \\ zonder CS\end{tabular} &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 1,88                               & 1,57                          \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 98,12                              & 98,43                         \\ \cmidrule(l){3-4} 
+        & Mediaan GC pauzetijd (ms)                                                      & 70,29                              & 65,26                         \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Mediaan interval \\ tussen pauzes (ms)\end{tabular} & 7172,50                            & 6179,75                       \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 713                                & 728                           \\ \midrule
+        optavgpause                                                 &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 1,14                               & 1,49                          \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 98,86                              & 98,51                         \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 1884                               & 2379                          \\ \midrule
+        optthruput                                                  &                                                                                &                                    &                               \\
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd\\ ongepauzeerd (\%)\end{tabular} & 0,95                               & 1,61                          \\ \cmidrule(l){3-4} 
+        & \begin{tabular}[c]{@{}l@{}}Proportie van tijd in\\ GC pauzes (\%)\end{tabular} & 99,05                              & 98,39                         \\ \cmidrule(l){3-4} 
+        & Totale pauzetijd (ms)                                                          & 1360                               & 2725                          \\ \midrule
+        &                                                                                &                                    &                               \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}          \\
+        &                                                                                & \multicolumn{1}{l}{}               & \multicolumn{1}{l}{}         
+    \end{tabular}
+\end{table}
+
+
 
 \chapter{Analyse}
+\label{ch:analyse}
+
+De verkregen data zullen we nu visualiseren, zodanig dat we een duidelijke en overzichtelijke analyse kunnen maken.
+
+De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-mainframe Garbage Collection, in functie van de gekozen garbage collector policy, uitgedrukt in milliseconden.
+
+%akka-uct pause time
+\begin{tikzpicture}
+    \begin{axis}[
+        title=akka-uct,
+        ybar,
+        enlargelimits=0.15,
+        legend cell align=left,
+        legend pos=outer north east,
+        ylabel={Totale pauzetijd (ms)},
+        ymajorgrids=true,
+        symbolic x coords={genconCS,gencon,optavgpause,optthruput},
+        x tick label style={rotate=45,anchor=east},
+        ]
+        \addplot[draw=orange!75!yellow,fill=orange!65!yellow!60!white] 
+        coordinates {(genconCS,199200) (gencon,203429) (optavgpause,66527) (optthruput,60641)};
+        \addplot [draw=orange!75!red,fill=orange!65!red!60!white] 
+        coordinates {(genconCS,473857) (gencon,266216) (optavgpause,116630) (optthruput,87217)};
+        \legend{Niet-mainframe,Mainframe}
+    \end{axis}
+\end{tikzpicture}
+
+%future-genetic pause-time
+\begin{tikzpicture}
+    \begin{axis}[
+        title=future-genetic,
+        ybar,
+        enlargelimits=0.15,
+        legend cell align=left,
+        legend pos=outer north east,
+        ylabel={Totale pauzetijd (ms)},
+        ymajorgrids=true,
+        symbolic x coords={genconCS,gencon,optavgpause,optthruput},
+        x tick label style={rotate=45,anchor=east},
+        ]
+        \addplot[draw=orange!75!yellow,fill=orange!65!yellow!60!white] 
+        coordinates {(genconCS,511) (gencon,561) (optavgpause,11463) (optthruput,473)};
+        \addplot [draw=orange!75!red,fill=orange!65!red!60!white] 
+        coordinates {(genconCS,596) (gencon,834) (optavgpause,25405) (optthruput,699)};
+        \legend{Niet-mainframe,Mainframe}
+    \end{axis}
+\end{tikzpicture}
+
+%dotty pause-time
+\begin{tikzpicture}
+    \begin{axis}[
+        title=dotty,
+        ybar,
+        enlargelimits=0.15,
+        legend cell align=left,
+        legend pos=outer north east,
+        ylabel={Totale pauzetijd (ms)},
+        ymajorgrids=true,
+        symbolic x coords={genconCS,gencon,optavgpause,optthruput},
+        x tick label style={rotate=45,anchor=east},
+        ]
+        \addplot[draw=orange!75!yellow,fill=orange!65!yellow!60!white] 
+        coordinates {(genconCS,934) (gencon,898) (optavgpause,1733) (optthruput,1037)};
+        \addplot [draw=orange!75!red,fill=orange!65!red!60!white] 
+        coordinates {(genconCS,1369) (gencon,1381) (optavgpause,1598) (optthruput,1643)};
+        \legend{Niet-mainframe,Mainframe}
+    \end{axis}
+\end{tikzpicture}
+
+
+%finagle-chirper pause-time
+\begin{tikzpicture}
+    \begin{axis}[
+        title=finagle-chirper,
+        ybar,
+        enlargelimits=0.15,
+        legend cell align=left,
+        legend pos=outer north east,
+        ylabel={Totale pauzetijd (ms)},
+        ymajorgrids=true,
+        symbolic x coords={genconCS,gencon,optavgpause,optthruput},
+        x tick label style={rotate=45,anchor=east},
+        ]
+        \addplot[draw=orange!75!yellow,fill=orange!65!yellow!60!white] 
+        coordinates {(genconCS,1426) (gencon,713) (optavgpause,1884) (optthruput,1360)};
+        \addplot [draw=orange!75!red,fill=orange!65!red!60!white] 
+        coordinates {(genconCS,1517) (gencon,728) (optavgpause,2379) (optthruput,2725)};
+        \legend{Niet-mainframe,Mainframe}
+    \end{axis}
+\end{tikzpicture}

@@ -136,7 +136,7 @@
   collection = {VEE ’09},
 }
 
-@Article{10.1145/359642.359655,
+@Article{Dijkstra1978,
   author     = {Dijkstra, Edsger W. and Lamport, Leslie and Martin, A. J. and Scholten, C. S. and Steffens, E. F. M.},
   title      = {On-the-Fly Garbage Collection: An Exercise in Cooperation},
   doi        = {10.1145/359642.359655},

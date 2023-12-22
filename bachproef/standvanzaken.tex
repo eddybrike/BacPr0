@@ -17,16 +17,16 @@
 
 \section{Garbage Collection}
 \label{sec:Garbage collection}
-Geheugenbeheer is een brede onderdeel van de computerwetenschap, alsook is er al veel onderzoek naar gemaakt.
+Geheugenbeheer is een breed onderdeel van de computerwetenschap, alsook is er al veel onderzoek naar gemaakt.
 Hoe efficiënter een programma gebruik kan maken van geheugen, oftewel hoe weinig mogelijk geheugen de programma moet gebruiken om te te functioneren hoe beter.
-Garbage Collection is het automatisch beheren van het geheugen van een programma zodanig dat alloceerde geheugen die niet meer gebruikt wordt terug opgeruimd kan worden zodanig dat er geheugen terug vrij komt.
+Garbage Collection is het automatisch beheren van het geheugen van een programma zodanig dat geheugen die gealloceerd is maar niet meer gebruikt wordt opgeruimd kan worden en het geheugen terug vrij komt.
 Alsook zou het mogelijk zijn dat zonder Garbage Collection er op een bepaald punt tijdens dat een applicatie draait er niet meer voldoende geheugen is, en deze niet voltooid kan worden.
 
 Meeste programmeertalen maken vandaag de dag gebruik van een \textit{heap}, in het algemeen kunnen we dit voorstellen als een gerichte graaf met knopen, of \textit{objecten}, met een \textit{root} object dat als vertrekpunt gebruikt wordt.
 
 
 \textit{Reference Counting} Garbage Collectors maken gebruik van een referentie teller voor elke object, dit betekent dat er per object een teller is die incrementeel stijgt voor elke referentie naar dat object.
-Als de teller op 0 staat betekend dit dat er geen referenties meer zijn naar naar dat object, deze object mag dan  opgeruimd worden.
+Als de teller op 0 staat betekend dit dat er geen referenties meer zijn naar naar dat object, dit object mag dan  opgeruimd worden.
 Het nadeel van deze implementatie is dat er een mogelijkheid bestaat dat 2 objecten alleen nog maar met elkaar een referentie hebben, de teller zal dan niet op 0 staan maar de objecten zijn niet meer bereikbaar voor het programma en moeten dus wel opgeruimd worden.
 Dit wordt een \textit{dode cykel} genoemd.\autocite{VanderCruysse2019}
 
@@ -45,7 +45,7 @@ De voornaamste zijn namelijk;
 
 \subsection{Generational}
 \label{sec:generational}    
-Generationele Garbage Collectors gaan uit van de principe dat objecten die recenter aangemaakt zijn meer kans hebben om dode objecten te zijn dan objecten die al lang levend zijn.
+Generationele Garbage Collectors gaan uit van het principe dat objecten die recenter aangemaakt zijn meer kans hebben om dode objecten te zijn dan objecten die al lang levend zijn.
 Deze Garbage Collectors verdelen de heap dan ook in generaties, objecten beginnen in de jongste generatie en naarmate ze levend blijven doorheen Garbage Collection kunnen ze naar oudere generaties gepromoveerd worden.
 Dit laat toe dat deze Garbage Collectors niet elke keer ook in de oudste generaties Garbage Collection gaan doen, hierdoor heeft de Garbage Collection minder \textit{overhead}.
 Overhead is het geheugen dat gebruikt wordt door een programma dat niet rechtstreeks verband heeft met hetgeen dat het programma wenst te verrichten, in andere woorden is het dus al hetgeen dat niet de noodzakelijke machine code is die door de processor uitgevoerd wordt om de gewenste berekeningen of instructies te bekomen.
@@ -72,7 +72,7 @@ Er zijn voornamelijk 3 onderdelen van deze runtime data area;
 \subsection{Stack}
 \label{sec:Stack}
 
-De stack houdt oftewel een primitieve variabele vast, of een referentie.
+De stack kan primitieve variabelen en referenties bevatten.
 Een primitieve variabele kan bijvoorbeeld een \textit{integer} zijn met een bepaalde numerieke waarde.
 Een referentie is een pointer naar een bepaalde \textit{memory address}, dit komt overeen met een fysieke locatie in het geheugen.\autocite{Huck1993}
 Er zijn 4 soorten referenties, namelijk;
@@ -86,7 +86,7 @@ Klasse referenties houden een verwijzing naar de adres van een object op de heap
 Array referenties verwijzen naar arrays
 Wanneer een referentie null is betekent het dat de referentie naar niets meer verwijst.
 Per thread van de Java Virtual Machine wordt er een stack aangemaakt bij het ontstaan van de thread.
- 
+
 %TODO
 %Per thread wordt er een stack gecreëerd !!TODO!! %TODO
 
@@ -114,7 +114,7 @@ Verder zijn er nog Dynamische class loaders, zij zorgen voor de metadata van kla
 \label{sec:garbage collection}
 Garbage Collection in Java bevrijdt geheugen uit zowel de heap als Metaspace.
 Wanneer een object in de heap bestaat maar er geen verwijzingen meer naar toe zijn in de stack geheugen wordt het object als 'dood' beschouwd, het mag verwijderd worden zodanig dat het verbruikte geheugen terug vrij komt.
-Als er geen objecten meer bestaan in de heap waarvan de Object Loader referenties naar de klasse metadata in de metaspace bezit, kan de Object Loader ook uit de heap verwijdert worden.
+Als er geen objecten meer bestaan in de heap waarvan de Object Loader referenties naar de klasse metadata in de metaspace bezit, kan de Object Loader ook uit de heap verwijderd worden.
 Indien dit zo is, zijn er klasse metadata in de metaspace waar er geen Object Loaders naar toe verwijzen, deze kunnen dan ook opgeruimd worden. \autocite{Putten2022}
 
 Garbage Collection in Java maakt gebruik van de Mark and Sweep principes.
@@ -158,13 +158,13 @@ De gebruikte vorm van Sweeping is afhankelijk van de gebruikte Garbage Collector
 
 In de simpelste term is een een mainframe een computer, hij bewaart en verwerkt data, en voert instructies uit.
 In deze onderzoek zal de mainframe gelijkgesteld worden met de IBM Z-model mainframes, deze series van mainframe modellen zijn hedendaags de leiders in de mainframe wereld, een overgrote meerderheid van bedrijven die gebruik maken van mainframes maken gebruik van IBM Z-model mainframes.
-Mainframes zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, volgens \textcite{Critchley2021} worden er per dag 30 miljard transacties op mainframes uitgevoerd, alsook maken %todod
+Mainframes zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, volgens \textcite{Critchley2021} worden er per dag zelfs 30 miljard transacties op mainframes uitgevoerd. %todod
 
 
 
 \subsection{Java}
 \label{sec:mainframe java}
-Java voor mainframes, specifiek voor IBM Z-system mainframes %todo
+Java voor mainframes, specifiek voor IBM Z-system mainframes wordt al een 20-tal jaren ondersteund.%todo
 Java op mainframe maakt gebruik van de OpenJ9 VM, dit is een Java Virtual Machine gemaakt door de \textit{Eclipse foundation}.
 Doordat Java zo ontworpen is dat de Java Virtual Machine de gecompileerde .class file naar machine code omvormt, ongeacht op welke platform dit uitgevoerd wordt, zijn er geen wijzigingen nodig aan de .class file om dit op mainframe te laten werken.
 

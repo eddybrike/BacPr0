@@ -7,15 +7,6 @@
 
 %De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zit de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
 
-\begin{itemize}
-  \item context, achtergrond
-  \item afbakenen van het onderwerp
-  \item verantwoording van het onderwerp, methodologie
-  \item probleemstelling
-  \item onderzoeksdoelstelling
-  \item onderzoeksvraag
-  \item \ldots
-\end{itemize}
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
 \label{sec:probleemstelling}
@@ -38,19 +29,35 @@
 Bedrijven die gebruik maken van een mainframe kunnen baat hebben bij het maken van Java programma's voor mainframe, of het migreren van bestaande Java programma's naar mainframe.
 Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn:
     \begin{itemize}
-    \item Een mainframe is gemaakt om zeer veel transacties te kunnen verwerken, Java programma's die grote hoeveelheden data moeten verwerken kunnen baat hebben door het gebruik maken van de kracht van de mainframe.
+    \item Een mainframe is gemaakt om zeer veel transacties te kunnen verwerken, Java programma's die grote hoeveelheden data moeten verwerken kunnen dus de mainframe hiervoor gebruiken.
     \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes, zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder als;
     \begin{quote}{Fred Brooks}
         Job Control Language is the worst programming language ever designed anywhere by anybody for any purpose.
     \end{quote}}
-    Het behouden van deze technologieën is noodzakelijk omdat de mainframe compatibel moet blijven met oude programma's, zonder dat die aangepast moeten worden.
-    Hierdoor stellen bedrijven vast dat er moeite is om nieuwe werkkracht te vinden die met deze technologieën en talen bekend zijn, daardoor is het interessant om Java programma's op mainframe te gebruiken omdat een breder deel van de arbeidsmarkt hierin bekwaam is. 
-    \item Java programma's die op mainframe draaien worden via de zIIP processor verwerkt, dit brengt ook enkele voordelen, dit onderwerp zal verbreed worden in de literatuurstudie.
+    Het is noodzakelijk dat de mainframe compatibel blijft met oude programma's, deze zijn geschreven in programmeertalen die vandaag de dag als ouderwets beschouwd worden, en niet meer aangeleerd worden door de nieuwe generaties van IT'ers.
+    Daarom dat Java op mainframe gebruiken interessant is omdat er een groter aantal mensen bekwaam zijn met deze programmeertaal in vergelijking met de traditionele mainframe programmeertalen, zoals onder andere PL/I, COBOL, Assembler of CICS.
+    
+    
+    \item Java programma's die op mainframe draaien worden via de zIIP processor verwerkt, dit brengt ook enkele voordelen, dit onderwerp zal in de methodologie verder verbreed worden.
+    
+    
  \end{itemize}
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}
 
 %Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
+De onderzoeksvraag van deze thesis is namelijk 'Wat zij de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
+Enkele deelvragen die hieronder vallen zijn namelijk;
+
+\begin{itemize}
+    
+    \item Is Garbage Collection voor Java op niet-mainframe en mainframe gelijklopend?
+    \item Wat is de invloed van Garbage Collection in Java op niet-mainframe en op mainframe?
+\end{itemize}
+
+
+
+  
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
@@ -71,5 +78,11 @@ In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een overzicht gegeven van de stand v
 In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
 
 % TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
+
+In Hoofdstuk~\ref{ch:opstelling} wordt de manier van werken toegelicht om de data van de Garbage Collection voor Java te bekomen.
+
+In Hoofdstuk~\ref{ch:uitvoering} wordt de effectieve uitvoering van de testen besproken.
+
+In Hoofdstuk~\ref{ch:analyse} wordt de bekomen data gegeven en toegelicht.
 
 In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein.

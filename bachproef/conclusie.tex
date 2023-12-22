@@ -14,5 +14,18 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-\lipsum[76-80]
 
+
+
+%todo beter maken
+We kunnen opmerken dat er een degelijke verschil is aan data tussen de programma's, er is geen enkel garbage Collector die voor elk programma het beste uitschijnt.
+Het is noodzakelijk om voor elk individueel programma na te kijken wat de beste Garbage Collector blijkt te zijn.
+
+
+De bekomen data voor de gencon policy met \textit{ConcurrentScavenge} blijkt niet overweldigend beter te zijn voor mainframe in vergelijking met niet-mainframe, dit ondanks de hardware geassisteerde \textit{Pause-less Garbage Collection} voor de IBM mainframes.
+Zelfs blijkt dat de gencon policy zonder ConcurrentScavenge op mainframe soms gelijk of zelfs beter blijkt de werken dan de gencon policy met \textit{ConcurrentScavenge}.
+
+
+Er blijkt ook dat er een verschil in werking kan zijn tussen Garbage Collectors op mainframe en niet-mainframe, dit is meest duidelijk te zien aan de totale pauzetijd tussen de optavgpause en optthruput policies voor finagle-chirper, waarbij de optavgpause meer totale pauzetijd heeft voor niet-mainframe, maar voor mainframe heeft de optthruput meer totale pauzetijd.
+
+Dit betekent dat het voor het migreren van een programma van niet-mainframe naar mainframe, of vice-versa, het nog steeds noodzakelijk is om opnieuw onderzoek te doen naar de optimale garbage Collection policy voor het nieuw systeem, en dat het niet noodzakelijk de beste optie is om de al voorheen gebruikte Garbage Collection policy over te nemen.
