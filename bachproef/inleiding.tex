@@ -30,7 +30,8 @@ Bedrijven die gebruik maken van een mainframe kunnen baat hebben bij het maken v
 Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn:
     \begin{itemize}
     \item Een mainframe is gemaakt om zeer veel transacties te kunnen verwerken, Java programma's die grote hoeveelheden data moeten verwerken kunnen dus de mainframe hiervoor gebruiken.
-    \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes, zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder als;
+    \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes.
+     Zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder als;
     \begin{quote}{Fred Brooks}
         Job Control Language is the worst programming language ever designed anywhere by anybody for any purpose.
     \end{quote}}
@@ -46,13 +47,13 @@ Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn
 \label{sec:onderzoeksvraag}
 
 %Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
-De onderzoeksvraag van deze thesis is namelijk 'Wat zij de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
-Enkele deelvragen die hieronder vallen zijn namelijk;
+De onderzoeksvraag van deze thesis is 'Wat zijn de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
+Hieruit kunnen we ook enkele deelvragen stellen.
 
 \begin{itemize}
-    
-    \item Is Garbage Collection voor Java op niet-mainframe en mainframe gelijklopend?
-    \item Wat is de invloed van Garbage Collection in Java op niet-mainframe en op mainframe?
+    \item Is Garbage Collection voor Java op niet-mainframe en mainframe gelijkaardig qua performantie?
+    \item Wat is de invloed van Garbage Collection in Java op niet-mainframe en op mainframe qua efficiëntie?
+    \item Werkt een Garbage Collector qua performantie hetzelfde wanneer er een programma van niet-mainframe naar mainframe migreert wordt?
 \end{itemize}
 
 
@@ -61,6 +62,10 @@ Enkele deelvragen die hieronder vallen zijn namelijk;
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
+
+De doelstelling van dit onderzoek is om een vergelijkende studie te maken omtrent de werking van Garbage Collection op mainframe en niet-mainframe.
+Dit door het vergelijken van een aantal statistieken verkregen vanuit testprogramma's.
+
 
 %Wat is het beoogde resultaat van je bachelorproef? Wat zijn de criteria voor succes? Beschrijf die zo concreet mogelijk. Gaat het bv.\ om een proof-of-concept, een prototype, een verslag met aanbevelingen, een vergelijkende studie, enz.
 
@@ -78,8 +83,6 @@ In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een overzicht gegeven van de stand v
 In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
 
 % TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
-
-In Hoofdstuk~\ref{ch:opstelling} wordt de manier van werken toegelicht om de data van de Garbage Collection voor Java te bekomen.
 
 In Hoofdstuk~\ref{ch:uitvoering} wordt de effectieve uitvoering van de testen besproken.
 

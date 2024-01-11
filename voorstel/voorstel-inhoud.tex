@@ -2,7 +2,7 @@
 
 \section{Introductie}%
 \label{sec:introductie}
-%De prestatie van een programma is een van de belangrijkste aspecten van het ontwikkelen van eender welk software, in deze onderzoek zal voornamelijk de geheugengebruik en totale uitvoeringstijd van de Garbage Collection van de applicatie gemeten worden.
+%De prestatie van een programma is een van de belangrijkste aspecten van het ontwikkelen van eender welk software, in dit onderzoek zal voornamelijk de geheugengebruik en totale uitvoeringstijd van de Garbage Collection van de applicatie gemeten worden.
 Dit onderzoek zal zich verdiepen op welke invloed Garbage Collection heeft op de prestatie van Java programma's, specifieker voor programma's die naar mainframe gemigreerd worden.
 De geheugengebruik en totale uitvoeringstijd van de Garbage Collection van de applicatie zal gemeten worden en gebruikt worden voor de vergelijkingen.
 
@@ -53,7 +53,7 @@ Het is mogelijk om met de \textit{System.gc()} methode een expliciete aanvraag v
 Het Heap geheugen is een deel van het geheugen dat aangemaakt wordt bij het opstarten van de Java Virtual machine (JVM), deze wordt gebruikt om geheugen aan alle objecten en arrays toe te wijzen.
 Verder is er nog de Stack geheugen, deze wordt gebruikt om geheugen toe te wijzen aan lokale variabelen binnenin methodes, wanneer een methode wordt opgeroepen wordt er een nieuw blok voorzien voor deze methode in de Stack geheugen waarin de variabelen voor deze methode opgeslagen worden \autocite{Cavanna2003}.
 Eens de methode is afgewerkt zal deze blok uit de Stack geheugen verwijderd worden.
-Alle JVM threads kunnen toegang tot de objecten in het heap geheugen krijgen, alsook toewijzingen uitvoeren zolang er nog voldoende geheugen beschikbaar is. 
+Alle JVM threads kunnen toegang tot de objecten in het heap geheugen krijgen, Alsook toewijzingen uitvoeren zolang er nog voldoende geheugen beschikbaar is. 
 
 Garbage verwijst naar objecten in het heap geheugen waarnaar geen andere objecten meer naar verwijzen, deze objecten mogen verwijderd worden.
 
@@ -141,7 +141,7 @@ De IBM health monitor kan ons ook voorzien van metrieken omtrent de garbage coll
 \section{Verwacht resultaat, conclusie}%
 \label{sec:verwachte_resultaten}
 
-IBM heeft specifiek voor mainframe de  Pause-less Garbage Collection algoritme ontwikkeld, hierdoor kunnen we verwachten dat deze algoritme dan ook de meest optimale resultaten zal leveren, in vergelijking met de niet-mainframe specifieke algoritmen.
+IBM heeft specifiek voor mainframe de  Pause-less Garbage Collection algoritme ontwikkeld, hierdoor kunnen we verwachten dat dit algoritme dan ook de meest optimale resultaten zal leveren, in vergelijking met de niet-mainframe specifieke algoritmen.
 De conclusie van dit onderzoek zal uitwijzen als dit inderdaad zo is, of als er toch andere algoritmes beter presteren.
 
 Er wordt ook verwacht dat verdere manipulatie van de Garbage Collector via parameter aanpassingen kan leiden tot een betere prestatie voor de applicaties.
