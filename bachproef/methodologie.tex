@@ -30,14 +30,12 @@
 
 
 
-%todo ziip<->zaap
-%todo JCL batch
 
 
 \section{Renaissance benchmark suite}
 Voor de Java programma's maken we gebruik van de \textit{Renaissance benchmark suite}.
 Dit is een collectie van enkele \textit{real-world} Java programma's, hiermee wordt bedoeld dat dit programma's zijn die een degelijke hoeveelheid instructies uitvoeren, en in een werkelijke business context zouden gebruikt kunnen worden. 
-Ook maken sommige programma's gebruik van bepaalde populaire Java frameworks.
+Verder maken sommige programma's gebruik van bepaalde populaire Java frameworks.
 
 
 
@@ -47,11 +45,16 @@ Aangezien de te draaien benchmark programma's op zowel de mainframe als niet-mai
 
 De benchmark suite is ook garbage collector agnostisch, de benchmark suite kan met om het even welke garbage collector policy uitgevoerd worden.
 
+
+Eens we de data verkregen hebben zullen we vergelijkingstabellen en grafieken opstellen om een analyse uit te kunnen voeren.
+
+\newpage
+\begin{table}[]
 \section{Systeem informatie}
 
 De volgende tabel geeft een overzicht van de specificaties van beide systemen;
 
-\begin{table}[]
+
     \caption{systeem informatie}
     \label{tab:Systeeminformatie}
     \begin{tabular}{@{}lll@{}}
@@ -66,13 +69,21 @@ De volgende tabel geeft een overzicht van de specificaties van beide systemen;
     \end{tabular}
 \end{table}
 
+
+
+
+
+
+
 \chapter{Uitvoering}
 \label{ch:uitvoering}
 
 Om deze Java applicaties uit te voeren maken we gebruik van de IBM Semeru Runtimes, dit is een open source Java SDK ontwikkeld door IBM.
-Een Java SDK is een collectie van middelen om software voor Java te onwtikkelen.
+Een Java SDK is een collectie van middelen om software voor Java te ontwikkelen.
 De Openj9 JVM wordt meegeleverd met de Semeru SDK, deze zal zorgen voor de effectieve uitvoering van de programma's.
 We zullen de IBM Semeru Runtimes SDK op zowel mainframe als niet-mainframe gebruiken.
+
+
 
 Voor de uitvoering zullen we 4 benchmark programma's gebruiken, namelijk;
 
@@ -124,7 +135,7 @@ De parameters zullen nu opgesomd worden.
     \item \textit{-verbose:gc}
     
     Deze parameter is nodig om de \textit{logging} van de Garbage Collection werking te verkrijgen.
-    Er worden bepaalde acties en gegevens in verband met de Garbage Collection bijgehouden, zoals onder andere de begin en eindtijden van de pauzeertijden, het aantal globale collecties, de hoeveelheid tijd nodig voor het marken en sweepen.
+    Er worden bepaalde acties en gegevens in verband met de Garbage Collection bijgehouden, zoals onder andere de begin- en eindtijden van de pauzeertijden, het aantal globale collecties, de hoeveelheid tijd nodig voor het marken en sweepen.
     Voor dit onderzoek zullen we de proportie van tijd dat de applicatie ongepuazeerd en gepauzeerd is, de mediaan  Garbage Collection pauzetijd, de mediaan interval tussen pauzes, en de totale pauzetijd bestuderen.
     
     
@@ -148,13 +159,13 @@ We zullen de applicaties met volgende Garbage Collection policies draaien.
 
 \begin{enumerate}
     
-    \item \textit{Gencon}
+    \item \textit{GenconCS}
     
-    We zullen deze gencon policy met de ConcurrentScavenge parameter draaien.
+    We zullen de gencon policy met de ConcurrentScavenge parameter draaien.
     Door deze parameter mee te geven zal er op mainframe gebruik gemaakt worden van de Guarded Storage facility.
     Op niet-mainframe zal er een software gebaseerde implementatie hiervan uitgevoerd worden.
     
-    \item \textit{Gencon zonder CS}
+    \item \textit{Gencon}
     
     We zullen de gencon policy ook zonder ConcurrentScavenge laten draaien.
     
@@ -169,7 +180,7 @@ We zullen de applicaties met volgende Garbage Collection policies draaien.
 
 Het is mogelijk om op mainframe de Java applicaties via de z/OS UNIX shell uit te voeren.
 We zullen kiezen om dit niet zo te doen, maar via een \textit{batch job} die wordt gestart door een JCL script. 
-Dit zullen we zo doen omdat de z/OS UNIX shell bijkomende processor geheugen verbruikt, het is een vorm van overhead.
+Dit wordt zo gedaan doen omdat de z/OS UNIX shell bijkomende processor geheugen verbruikt, het is een vorm van overhead.
 
 \section{Resultaten}
 
@@ -312,11 +323,13 @@ De Garbage Collection logs werden door middel van het IBM programma, \textit{Gar
 
 De verkregen data zullen we nu visualiseren, zodanig dat we een duidelijke en overzichtelijke analyse kunnen maken.
 
+\section{Totale pauzetijd}
+
 De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-mainframe Garbage Collection, in functie van de gekozen garbage collector policy, uitgedrukt in milliseconden.
 
 
 %akka-uct pause time
-\begin{figure}
+\begin{figure}[H]
     \caption[akka-uct totale pauzeertijd]{Vergelijkende tabel van de akka-uct programma, Garbage Collectors worden weergeven met hun totale pauzeertijd}
     \begin{tikzpicture}
         \begin{axis}[
@@ -341,7 +354,7 @@ De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-ma
 
 
 %future-genetic pause-time
-\begin{figure}
+\begin{figure}[H]
     \caption[future-genetic totale pauzeertijd]{Vergelijkende tabel van de future-genetic programma, Garbage Collectors worden weergeven met hun totale pauzeertijd}  
     \begin{tikzpicture}
         \begin{axis}[
@@ -364,7 +377,7 @@ De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-ma
     \end{tikzpicture}
 \end{figure}
 %dotty pause-time
-\begin{figure}
+\begin{figure}[H]
     \caption[dotty totale pauzeertijd]{Vergelijkende tabel van de dotty programma, Garbage Collectors worden weergeven met hun totale pauzeertijd} 
     \begin{tikzpicture}
         \begin{axis}[
@@ -388,7 +401,7 @@ De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-ma
 \end{figure}
 
 %finagle-chirper pause-time
-\begin{figure}
+\begin{figure}[H]
     \caption[finagle-chirper totale pauzeertijd]{Vergelijkende tabel van de finagle-chirper programma, Garbage Collectors worden weergeven met hun totale pauzeertijd} 
     \begin{tikzpicture}
         \begin{axis}[
@@ -411,12 +424,13 @@ De volgende grafieken geven de totale pauzetijd weer van de mainframe en niet-ma
     \end{tikzpicture}
 \end{figure}
 
-
+\section{Proportie ongepauzeerd}
 De volgende grafieken geven de proportie dat een applicatie niet gepauzeerd werd door de GC weer van de mainframe en niet-mainframe Garbage Collection.
 Dit in functie van de gekozen garbage collector policy, uitgedrukt in procent.
 
 %akka-uct proportie ongepauseerd
-\begin{figure}
+\begin{figure}[H]
+    
     \caption[akka-uct proportie ongepauseerd]{Vergelijkende tabel van de akka-uct programma, Garbage Collectors worden weergeven met de proportie van de applicatie tijd dat niet gepauzeerd werd door de Garbage Collection}
     \begin{tikzpicture}
         \begin{axis}[
@@ -442,7 +456,7 @@ Dit in functie van de gekozen garbage collector policy, uitgedrukt in procent.
 
 
 %future-genetic proportie ongepauseerd
-\begin{figure}
+\begin{figure}[H]
     \caption[future-genetic proportie ongepauseerd]{Vergelijkende tabel van de future-genetic programma, Garbage Collectors worden weergeven met de proportie van de applicatie tijd dat niet gepauzeerd werd door de Garbage Collection}
     \begin{tikzpicture}
         \begin{axis}[
@@ -468,7 +482,7 @@ Dit in functie van de gekozen garbage collector policy, uitgedrukt in procent.
 
 
 %dotty proportie ongepauseerd
-\begin{figure}
+\begin{figure}[H]
     \caption[dotty proportie ongepauseerd]{Vergelijkende tabel van de dotty programma, Garbage Collectors worden weergeven met de proportie van de applicatie tijd dat niet gepauzeerd werd door de Garbage Collection}
     \begin{tikzpicture}
         \begin{axis}[
@@ -494,7 +508,7 @@ Dit in functie van de gekozen garbage collector policy, uitgedrukt in procent.
 
 
 %finagle-chirper proportie ongepauseerd
-\begin{figure}
+\begin{figure}[H]
     \caption[finagle-chirper proportie ongepauseerd]{Vergelijkende tabel van de finagle-chirper programma, Garbage Collectors worden weergeven met de proportie van de applicatie tijd dat niet gepauzeerd werd door de Garbage Collection}
     \begin{tikzpicture}
         \begin{axis}[

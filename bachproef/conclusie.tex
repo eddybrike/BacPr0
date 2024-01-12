@@ -17,15 +17,34 @@
 
 
 
-%todo beter maken 
+
 We kunnen opmerken dat er een degelijke verschil is aan data tussen de programma's, er is geen enkel garbage Collector dat voor elk programma het beste uitschijnt.
 Het is noodzakelijk om voor elk individueel programma na te kijken wat de beste Garbage Collector blijkt te zijn.
 
 
-De bekomen data voor de gencon policy met \textit{ConcurrentScavenge} blijkt niet overweldigend beter te zijn voor mainframe in vergelijking met niet-mainframe, dit ondanks de hardware geassisteerde \textit{Pause-less Garbage Collection} voor de IBM mainframes.
-Zelfs blijkt dat de gencon policy zonder ConcurrentScavenge op mainframe soms gelijk of zelfs beter blijkt de werken dan de gencon policy met \textit{ConcurrentScavenge}.
+De bekomen data voor de gencon policy met \textit{ConcurrentScavenge} lijkt niet overweldigend beter te zijn voor mainframe in vergelijking met niet-mainframe, dit ondanks de hardware geassisteerde \textit{Pause-less Garbage Collection} voor de IBM mainframes.
+Zelfs is het zo dat de gencon policy zonder ConcurrentScavenge op mainframe soms gelijk of zelfs beter blijkt te werken dan de gencon policy met ConcurrentScavenge.
+
 
 
 Er blijkt ook dat er een verschil in werking kan zijn tussen Garbage Collectors op mainframe en niet-mainframe, dit is meest duidelijk te zien aan de totale pauzetijd tussen de optavgpause en optthruput policies voor finagle-chirper, waarbij de optavgpause meer totale pauzetijd heeft voor niet-mainframe, maar voor mainframe heeft de optthruput meer totale pauzetijd.
 
-Dit betekent dat het voor het migreren van een programma van niet-mainframe naar mainframe, of vice-versa, het nog steeds noodzakelijk is om opnieuw onderzoek te doen naar de optimale garbage Collection policy voor het nieuw systeem, en dat het niet noodzakelijk de beste optie is om de al voorheen gebruikte Garbage Collection policy over te nemen.
+Dit betekent dat het voor het migreren van een programma van niet-mainframe naar mainframe, of vice-versa, het nog steeds noodzakelijk is om opnieuw onderzoek te doen naar de optimale garbage Collection policy voor het nieuwe systeem, en dat het niet noodzakelijk de beste optie is om de al voorheen gebruikte Garbage Collection policy over te nemen.
+
+
+Als we de proportionele pauzetijden bekijken kunnen we zien dat de gencon policy met ConcurrentScavenge in het geval van de akka-uct applicatie op mainframe slechter presteert dan de gencon policy zonder ConcurrentScavenge.
+Ook is er geen enkel applicatie waarbij de optavgpause beter presteert dan de optthruput.
+Dit is opmerkelijk aangezien de optavgpause uitdrukkelijk bedoeld is om minder pauzetijd te hebben.
+Om de oorzaak hiervan te vinden is er nog verder onderzoek nodig.
+Verder is er nog onderzoek nodig om de oorzaak te vinden waarom de gencon zonder ConcurrentScavenge soms beter presteert dan de gencon met ConcurrentScavenge, zowel op niet-mainframe als mainframe.
+
+
+\paragraph{Eindconclusie}
+
+Als conclusie voor onze onderzoeksvraag, `Wat zijn de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?' kunnen we stellen dat de migratie wel degelijk gevolgen heeft voor de Garbage Collection.
+Het is zo dat de pauzetijden, zowel de totale duur als de proportionele pauzetijd, niet altijd hetzelfde zijn tussen niet-mainframe en mainframe.
+
+
+Als belangrijkste conclusie kunnen we bepalen dat de optimaalste Garbage Collection policy voor een Java applicatie niet noodzakelijk hetzelfde is voor niet-mainframe als voor mainframe.
+
+

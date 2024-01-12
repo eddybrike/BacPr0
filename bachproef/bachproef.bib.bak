@@ -199,4 +199,11 @@
   url    = {https://www.ibm.com/docs/en/sdk-java-technology/8?topic=management-gc-policies#optthruput-policy},
 }
 
+@Online{2004,
+  author = {Brooks,Fred and Bloch, Eric and Evans, Bob},
+  date   = {2004-04-07},
+  title  = {The IBM System/360 Revolution},
+  url    = {https://www.youtube.com/watch?v=8c0_Lzb1CJw},
+}
+
 @Comment{jabref-meta: databaseType:biblatex;}

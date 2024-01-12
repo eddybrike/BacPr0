@@ -57,20 +57,22 @@ Programma's op mainframe maken gebruik van verouderde programmeertalen, er is ee
 Daarom dat het interessant is om Java op mainframe te gebruiken, zowel om de kracht van de mainframe te kunnen gebruiken, en omdat een groter hoeveelheid van de arbeidsmarkt hiermee bekwaam is.
 
 %onderzoeksvraag
-
+De centrale onderzoeksvraag is 'Wat zijn de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
 %methodologie
 Voor de Java applicaties zelve maken we gebruik van de Renaissance benchmark suite, deze suite geeft ons een uitgebreid aantal grootschalige en verschillende Java applicaties.
-We voeren vier van deze programma's uit op zowel niet-mainframe als mainframe, met een vijftal Garbage Collection policies.
+We voeren vier van deze programma's uit op zowel niet-mainframe als mainframe, met een viertal Garbage Collection policies.
 
 %resultaten
+De bekomen resultaten geven weer dat er een verschil is tussen de Garbage Collection op mainframe en niet-mainframe.
 
 
 %conclusie
 Uit deze resultaten kunnen we concluderen dat migratie vanuit niet-mainframe naar mainframe wel degelijk een impact heeft op Garbage Collection in Java.
-Hiermee kunnen we aanbevelen dat indien er gemigreerd wordt van niet-mainframe naar mainframe, of vice-versa, er opnieuw getest moet worden naar wat de optimaalste Garbage Collection policy is.
+Ook stellen we vast dat er geen Garbage Collector is die altijd de beste keuze is.
+
+
+Hiermee kunnen we aanbevelen dat indien er gemigreerd wordt van niet-mainframe naar mainframe, of vice-versa, er opnieuw getest moet worden naar wat de meest optimale Garbage Collection policy is.
 
 
 
 
-
-%todo

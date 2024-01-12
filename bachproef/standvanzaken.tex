@@ -19,37 +19,44 @@
 \label{sec:Garbage collection}
 Geheugenbeheer is een breed onderdeel van de computerwetenschap, ook is er al veel onderzoek naar gemaakt.
 Hoe efficiënter een programma gebruik kan maken van geheugen, oftewel hoe minder geheugen het programma moet gebruiken om te functioneren hoe beter.
-Garbage Collection is het automatisch beheren van het geheugen van een programma zodanig dat geheugen dat gealloceerd is maar niet meer gebruikt wordt opgeruimd kan worden en het geheugen terug vrij komt.
-Ook zou het mogelijk zijn dat zonder Garbage Collection er op een bepaald punt terwijl een applicatie draait er niet meer voldoende geheugen is, en deze niet voltooid kan worden.
-Garbage Collection is wel een vorm van \textit{overhead}.
+Garbage Collection is het automatisch beheren van het geheugen van een programma.
 
 
+Zodanig dat het geheugen die gealloceerd is maar niet meer gebruikt wordt opgeruimd kan worden en het geheugen terug vrij komt.
+Ook zou het mogelijk zijn dat zonder Garbage Collection er op een bepaald punt terwijl, een applicatie draait er niet meer voldoende geheugen is. Waardoor deze niet voltooid kan worden.
+
+
+Garbage Collection is een vorm van \textit{overhead}.
 Overhead is het geheugen dat gebruikt wordt door een programma dat niet rechtstreeks verband heeft met hetgeen dat het programma wenst te verrichten.
-In andere woorden is het dus al hetgeen dat niet de noodzakelijke machine code is die door de processor uitgevoerd wordt om de gewenste berekeningen of instructies te bekomen.
-Garbage Collection is een vorm van overhead, het is gewenst om zo min mogelijk overhead te hebben, dus is het noodzakelijk om uiterst efficiënt mogelijke Garbage Collection uitvoeringen te hebben.
+In andere woorden is het dus alles dat niet de noodzakelijke machine code is die door de processor uitgevoerd wordt om de gewenste berekeningen of instructies te bekomen.
+Het is gewenst om zo min mogelijk overhead te hebben, dus is het noodzakelijk om uiterst efficiënt mogelijke Garbage Collection uitvoeringen te hebben.
 
 
-Meeste programmeertalen maken vandaag de dag gebruik van een \textit{heap}, in het algemeen kunnen we dit voorstellen als een gerichte graaf met knopen, of \textit{objecten}, met een \textit{root} object dat als vertrekpunt gebruikt wordt.
+Meeste programmeertalen maken vandaag de dag gebruik van een \textit{heap}.
+In het algemeen kunnen we dit voorstellen als een gerichte graaf met knopen, of objecten, met een \textit{root} object dat als vertrekpunt gebruikt wordt.
 
 
 \textit{Reference Counting} Garbage Collectors maken gebruik van een referentie teller voor elke object, dit betekent dat er per object een teller is die incrementeel stijgt voor elke referentie naar dat object.
-Als de teller op 0 staat betekent dit dat er geen referenties meer zijn naar dat object, dit object mag dan  opgeruimd worden.
+Als de teller op 0 staat betekent dit dat er geen referenties meer zijn naar dat object, dit object moet dan  opgeruimd worden.
 Het nadeel van deze implementatie is dat er een mogelijkheid bestaat dat 2 objecten alleen nog maar met elkaar een referentie hebben.
-De teller zal dan niet op 0 staan maar de objecten zijn niet meer bereikbaar voor het programma en moeten dus wel opgeruimd worden.
+De teller zal dan niet op 0 staan, maar de objecten zijn niet meer bereikbaar voor het programma en moeten dus wel opgeruimd worden.
+%todo  beter uitleggen
 Dit wordt een \textit{dode cykel} genoemd.\autocite{VanderCruysse2019}
 
 \textit{Tracing} Garbage Collectors werken aan de hand van een ander principe.
 Knopen die vanuit de root niet meer bereikbaar zijn kunnen ook niet meer door het programma gebruikt worden.
 Het is niet alleen onnodig dat deze knopen nog blijven bestaan, maar zelfs nadelig aangezien zij wel nog steeds geheugen gebruiken.
-Onbereikbare objecten worden 'dood' genoemd, knopen die nog steeds bereikbaar zijn worden 'levend' genoemd.
+Onbereikbare objecten worden 'dood' genoemd.
+Objecten die nog steeds bereikbaar zijn worden 'levend' genoemd.
 Tracing Garbage Collectors gaan dus te werk door alle objecten die niet bereikbaar zijn vanuit de root te vinden. 
-Het nadeel aan deze werkwijze is dat Tracing Garbage Collectors gebruik maken van ``\textit{Stop-the-world events}'', ze pauzeren de threads van het programma om aan Garbage Collection te kunnen doen.
+Het nadeel aan deze werkwijze is dat Tracing Garbage Collectors gebruik maken van ``\textit{Stop-the-world events}'', ze pauzeren de \textit{threads} van het programma om Garbage Collection uit te kunnen voeren.
 
 Binnen de Tracing Garbage Collectors zijn er verschillende manieren, of algoritmes, om te bepalen welke delen van het geheugen opgeruimd mogen worden.
-De voornaamste Garbage Collector algoritmes zijn \textit{mark/sweep}, \textit{generational} GC en \textit{semi-space} GC.
+De voornaamste Garbage Collector algoritmes zijn; \textit{mark/sweep}, \textit{generational} GC en \textit{semi-space} GC.
+
 Deze zullen nu besproken worden.
 \subsection{Mark/Sweep}
-Mark and Sweep Collectors gaan te werk aan de hand van een pad door alle bereikbare objecten te banen, startend vanuit het root object. De bezochte objecten worden ook gemarkeerd, eens de markering fase voorbij is kunnen alle objecten die niet gemarkeerd zijn verwijderd worden, aangezien zij niet meer bereikbaar zijn vanuit de root en geen waarde meer voor het programma zijn.
+Mark and Sweep Collectors gaan te werk aan de hand van een pad door alle bereikbare objecten te banen, startend vanuit het root object. De bezochte objecten worden ook gemarkeerd. Eens de markering fase voorbij is kunnen alle objecten die niet gemarkeerd zijn verwijderd worden, aangezien zij dan niet meer bereikbaar zijn vanuit de root en dus geen waarde meer voor het programma zijn.
 
 
 
@@ -57,35 +64,39 @@ Mark and Sweep Collectors gaan te werk aan de hand van een pad door alle bereikb
 \label{sec:generational}    
 Generationele Garbage Collectors gaan uit van het principe dat objecten die recenter aangemaakt zijn meer kans hebben om dode objecten te zijn dan objecten die al lang levend zijn.
 Deze Garbage Collectors verdelen de heap dan ook in generaties, objecten beginnen in de jongste generatie en naarmate ze levend blijven doorheen Garbage Collection kunnen ze naar oudere generaties gepromoveerd worden.
-Dit laat toe dat deze Garbage Collectors niet elke keer ook in de oudste generaties Garbage Collection gaan doen, hierdoor heeft de Garbage Collection minder overhead.
+Dit laat toe dat deze Garbage Collectors niet elke keer in de oudste generaties Garbage Collection uitvoeren.   
+ Hierdoor heeft de Garbage Collection minder overhead.
 
 
 
 
 \subsection{Semi-Space}
 \label{sec:semi-space}    
-Semi-Space Garbage Collectors verdelen de beschikbare geheugen in 2 gelijke regio's, de 'naar-regio' en de 'van-regio'.
+Semi-Space Garbage Collectors verdelen het beschikbare geheugen in 2 gelijke regio's; de 'naar-regio' en de 'van-regio'.
 Objecten worden gealloceerd in de van-regio, eens de van-regio vol is worden alle levende objecten gekopieerd naar de naar-regio.
-Dan wordt de van-regio gewist, en de functie van de regio's wordt verwisseld.
-De van-regio wordt namelijk de naar-regio, en de naar-regio wordt de van-regio.\autocite{Byers2007}
+Daarna wordt de inhoud van de van-regio gewist, en de functie van de regio's wordt verwisseld.
+Dit betekend dat de van-regio de naar-regio wordt, en de naar-regio de van-regio. \autocite{Byers2007}
+Dit zorgt ervoor dat bij grote hoeveelheden heap geheugen de Semi-Space collector een beter performantie heeft dan de vorig besproken Garbage Collectors.
 
-Dit zorgt ervoor dat Semi-Space Garbage Collectors een beter performantie heeft dan de vorige besproken Garbage collectors bij grote hoeveelheden \textit{heap} geheugen, de heap zal verder in deze literatuurstudie toegelicht worden.
 
-Concreet wil dit zeggen dat er minder tijd nodig is om de Garbage Collection uit te voeren, maar het nadeel is wel dat er voor de Garbage Collector zelve een groter hoeveelheid geheugen nodig is.
-Dit omdat hij altijd een lege kopie heeft van de nodige geheugen van de applicatie, dus moet er altijd dubbel zo veel geheugen zijn. \autocite{Siqiu2019}
+
+Concreet wil dit zeggen dat er minder tijd nodig is om de Garbage Collection uit te voeren, maar het nadeel is dan dat er voor de Garbage Collector zelve een groter hoeveelheid geheugen nodig is.
+Dit omdat deze altijd een lege kopie heeft van het nodige geheugen van de applicatie.
+Hierdoor moet er altijd dubbel zo veel geheugen zijn in vergelijking met applicaties die niet gebruik maken van Semi-Space Garbage Collection. \autocite{Siqiu2019}
 
 
 \section{Java geheugenbeheer}
 \label{sec:java geheugenbeheer}
 Vooraleer we de implementatie van Garbage Collection in Java kunnen bespreken is het noodzakelijk om een goed beeld te krijgen over hoe Java het geheugengebruik beheert.
-Java code wordt gecompileerd naar een .class file, deze bestaat uit '\textit{bytecode}', deze wordt geïnterpreteerd door de '\textit{Java Virtual Machine}' en omgevormd naar \textit{machine code}.
-Dit is code die door de processor geïnterpreteerd en uitgevoerd kan worden.
+Java code wordt gecompileerd naar een .class file, deze bestaat uit \textit{bytecode}, wordt geïnterpreteerd door de \textit{Java Virtual Machine}(JVM) en wordt omgevormd naar \textit{machine code}.
+Dit is dan code die door de processor geïnterpreteerd en uitgevoerd kan worden.
 
 \subsection{Geheugenbeheer}
 
-De JVM zorgt ook voor het beheer van het geheugengebruik, de \textit{runtime data area} is een onderdeel van de .class file, die de JVM gebruikt om geheugen te beheren die nodig is voor klassen data, geheugen toekenning, en uit te voeren instructies.\autocite{Putten2022}
+Buiten het interpreteren van de .class file zorgt de JVM ook voor het beheer van het geheugengebruik.
+De \textit{runtime data area} is een onderdeel van de .class file, die de JVM gebruikt om geheugen te beheren die nodig is voor klassen data, geheugen toekenning, en uit te voeren instructies.\autocite{Putten2022}
 De voornaamste onderdelen van deze runtime data area zijn de Stack, Heap, en de metaspace.
-Hier gaan wij nu dieper in.
+Hier gaan wij nu dieper op in.
 
 \subsubsection{Stack}
 \label{sec:Stack}
@@ -93,40 +104,40 @@ Hier gaan wij nu dieper in.
 De stack kan primitieve variabelen en referenties bevatten.
 Een primitieve variabele kan bijvoorbeeld een \textit{integer} zijn met een bepaalde numerieke waarde.
 Een referentie is een pointer naar een bepaalde \textit{memory address}, dit komt overeen met een fysieke locatie in het geheugen.\autocite{Huck1993}
-Er zijn 4 soorten referenties, deze zullen we nu bespreken.
+Er zijn 4 soorten referenties, klasse, array, interface, en null.
 \begin{enumerate}
-    \item Klasse referenties
-    \item Array referenties
-    \item Interface referenties
-    \item Null
+    \item  Klasse referenties houden een verwijzing naar het adres van een object op de heap geheugen.
+    Objecten worden in de heap geheugen opgeslagen.
+    \item Array referenties verwijzen naar arrays, die een verzameling van referenties zijn.
+    \item Interface referenties refereren naar een interface, dit is geen object an sich, maar een sjabloon voor een object aan te maken.
+    Sjabloon in deze context betekent dat er in een interface al methodes kunnen worden gedeclareerd, maar deze zijn leeg en moeten verder aangevuld worden in de concrete klassen zelve.
+    \item Null referenties zijn referenties dat naar niets meer verwijzen.
 \end{enumerate}
-Klasse referenties houden een verwijzing naar de adres van een object op de heap geheugen, objecten worden in de heap geheugen opgeslagen.
-Array referenties verwijzen naar arrays, een verzameling van referenties.
-Een Interface referentie refereert naar een interface, dit is geen object an sich, maar een sjabloon voor een object aan te maken.
-Met sjabloon wordt bedoeld dat er in een interface al methodes kunnen worden gedeclareerd, maar deze zijn leeg en moeten verder aangevuld worden in de concrete klassen zelve.
 
-Wanneer een referentie null is betekent het dat de referentie naar niets meer verwijst.
+
 Per thread van de Java Virtual Machine wordt er een stack aangemaakt bij het ontstaan van de thread.
 \autocite{Lindholm2013}
 
 \subsubsection{Heap}
 \label{sec:heap}
-Volgens \textcite{Grgic2018} wordt de heap aangemaakt door de JVM bij het opstarten van de Java programma.
+Volgens \textcite{Grgic2018} wordt de heap aangemaakt door de JVM bij het opstarten van het Java programma.
 De heap heeft geheugenposities die gebruikt worden om geheugen toe te wijzen aan arrays en instanties van klassen, ook bekend als objecten.
-Ook kan een geheugenpositie in de heap leeg zijn.
+Een geheugenpositie in de heap kan ook leeg zijn.
 
-De heap is een array van geheugen posities die of niets of een object bevatten.
+De heap is een array van geheugen posities die of niets, of een object bevatten.
 Een object is een aaneengesloten reeks van geheugenposities. Het wordt zelf onderverdeeld in velden die een primitieve type kunnen bevatten of een referentie.
-Deze referentie kan een pointer zijn naar een ander object in de heap geheugen, of null zijn.\autocite{Bruno2018}
+Deze referentie kan een pointer zijn naar of een ander object in de heap geheugen, of null.\autocite{Bruno2018}
 \subsubsection{Metaspace}
 \label{sec:Metaspace}
 De Metaspace bevat metadata over klassen.
 Wanneer er een object wordt aangemaakt waarvan er nog geen objecten van die klasse bestaan, moet er metadata over de klasse voorzien worden in de Metaspace, de Class Loader zorgt hiervoor.
 
-De Class Loader is een object in de heap, deze bevat referenties naar de metadata over de klasse, deze metadata bevindt zich in de Metaspace geheugen.
-Er is niet maar 1 Class Loader, er bestaan verschillende Class Loaders, de bootstrap class loader voor andere class loaders aan te maken, en de applicatie class loader voor de root klasse van de applicatie, deze houden metadata die permanent in de Metaspace verblijft.
+De Class Loader is een object in de heap, die referenties naar de metadata over de klasse van het object bevat.
+Deze metadata bevindt zich in de Metaspace geheugen.
+Er bestaan meerdere Class Loaders, de bootstrap class loader voor andere class loaders aan te maken, en de applicatie class loader voor de root klasse van de applicatie.
+Deze houden metadata die permanent in de Metaspace verblijft.
 
-Verder zijn er nog Dynamische class loaders, zij zorgen voor de metadata van klassen van objecten die door het programma gecreëerd worden, de metadata hiervan verblijft niet noodzakelijk permanent in de Metaspace.
+Verder zijn er nog Dynamische class loaders. Zij zorgen voor metadata van klassen van objecten die door het programma gecreëerd worden, de metadata hiervan verblijft niet noodzakelijk permanent in de Metaspace.
 \autocite{Putten2022}
 \subsection{Garbage Collection in Java}
 \label{sec:garbage collection}
@@ -143,8 +154,9 @@ Al hetgeen dat niet gemarkeerd is, dus hetgeen waarvan de markeer-bit 0 is, mag 
 
 Een probleem dat hierdoor ontstaat is de mogelijkheid dat tijdens een Garbage Collection event er nieuwe objecten ontstaan.
 Indien de pointer hiervan in een regio van de stack opgeslagen wordt dat al eerder door de Garbage Collector bezocht werd blijft dit object ongemarkeerd.
-Deze objact zal dus aan het einde van de Garbage Collection event ook verwijderd worden.
-Om deze probleem te vermijden maakt Java gebruik van \textit{Stop-the-world} events, dit betekend dat tijdens Garbage Collection events de applicatie threads gepauzeerd worden.
+Dit object zal dus aan het einde van de Garbage Collection event ook verwijderd worden.
+Om deze probleem te vermijden maakt Java gebruik van \textit{Stop-the-world} events.
+Dit betekent dat tijdens Garbage Collection events de applicatie threads gepauzeerd worden.
 De applicatie threads pauzeren is een duidelijke negatieve invloed op de performantie van de applicatie, en er wordt gewenst om de invloed hiervan zo min mogelijk te maken.
 \autocite{Putten2022}
 
@@ -160,11 +172,11 @@ Dit kan ervoor zorgen dat bij het aanmaken van een nieuwe object er niet genoeg 
 \subsubsection{Sweep and compact}
 Om deze problematiek op te lossen bestaat er Sweeping with Compacting.
 Het sweeping gedeelte gebeurt gelijkaardig, de dode objecten worden verwijderd.
-Eens dat dat voltooid is zal er nu een compacting fase uitgevoerd worden.
-De geheugen blokken van de overblijvende levend objecten worden verplaatst zodanig dat er geen kloven meer zijn tussen de geheugen blokken.
+Wanneer dit voltooid is zal er een compacting fase uitgevoerd worden.
+Hierna worden de geheugen blokken van de overblijvende levend objecten verplaatst zodanig dat er geen kloven meer zijn tussen de geheugen blokken.
 % Sweep and copy
 \subsubsection{Sweep and copy}
-Compacting is een vrij intensief proces, Copying is minder intensief maar vergt een groter vrije aantal geheugen op aanvang.
+Compacting is een intensiever proces in vergelijking met Copying, die minder intensief is maar een groter aantal geheugen op aanvang vraagt.
 Na de markeer fase worden nu eerst alle nog levende objecten gekopieerd naar een tweede, lege geheugen regio.
 Eens de levende objecten gekopieerd zijn wordt de vorige geheugen regio volledig gewist, zowel de dode als levende objecten worden hieruit verwijderd.
 Hierdoor is de eerste regio leeg terwijl de tweede regio enkel nog de levende objecten bevat, zonder kloven tussen de geheugen blokken.
@@ -178,16 +190,17 @@ De gebruikte vorm van Sweeping is afhankelijk van de gebruikte Garbage Collector
 \subsection{Mainframe introductie}
 \label{sec:mainframe introductie}
 
-In de simpelste term is een een mainframe een computer, hij bewaart en verwerkt data, en voert instructies uit.
+In de simpelste term is een mainframe een computer, hij bewaart en verwerkt data, en voert instructies uit.
 In dit onderzoek zal de mainframe gelijkgesteld worden met de IBM Z-model mainframes.
-Deze series van mainframe modellen zijn hedendaags de leiders in de mainframe wereld, een overgrote meerderheid van bedrijven die gebruik maken van mainframes maken gebruik van IBM Z-model mainframes.
-Mainframes zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, volgens \textcite{Critchley2021} worden er per dag zelfs 30 miljard transacties op mainframes uitgevoerd.
+Deze series van mainframe modellen zijn hedendaags de leiders in de mainframe wereld.
+Een overgrote meerderheid van bedrijven die gebruik maken van mainframes maken gebruik van IBM Z-model mainframes.
+Deze zijn gemaakt om op zeer grootschalig niveau data en transacties te verwerken, volgens \textcite{Critchley2021} worden er per dag zelfs 30 miljard transacties op mainframes uitgevoerd.
 
 
 
 \subsection{Java voor mainframe}
 \label{sec:mainframe java}
-Java voor mainframes, specifiek voor IBM Z-system mainframes wordt al een 20-tal jaren ondersteund.
+Java voor mainframes, specifiek voor IBM Z-system mainframes wordt al een 20-tal jaar ondersteund.
 Java op mainframe maakt gebruik van de OpenJ9 VM, dit is een Java Virtual Machine gemaakt door de \textit{Eclipse foundation}.
 Doordat Java zo ontworpen is dat de Java Virtual Machine de gecompileerde .class file naar machine code omvormt, ongeacht op welke platform dit uitgevoerd wordt, zijn er geen wijzigingen nodig aan de .class file om dit op mainframe te laten werken.
 
@@ -202,32 +215,35 @@ Dit algoritme is geen Garbage Collector an sich, maar een hulpmiddel voor de Gen
 De Gencon Garbage Collection gaat zo te werk;
 De Java heap wordt onderverdeeld in twee regio's, de \textit{tenure} en \textit{nursery} regio.
 De nursery regio is de regio waarin nieuwe objecten opgeslagen worden.
-De tenure regio is de regio waar objecten naar toe worden verplaatst eens zij de tenure leeftijd hebben bereikt, oftewel een voorgedefinieerde aantal Garbage Collection cycli hebben overleefd. 
+En de tenure regio is de regio waar objecten naar toe worden verplaatst eens zij de tenure leeftijd hebben bereikt, oftewel een voorgedefinieerde aantal Garbage Collection cycli hebben overleefd. 
 
 \begin{enumerate}
     \item Objecten worden in de \textit{allocate space} aangemaakt.
     \item De allocate space wordt opgevuld en er is niet voldoende geheugen om nieuwe objecten op te slaan.
-    \item Er wordt een lokale \textit{scavenge process} gestart en de bereikbare, of levende, objecten worden naar de survivor space vanuit de allocate space gekopieerd, indien de object de tenure age bereikt heeft, wordt die naar de tenure space gekopieerd.
+    \item Er wordt een lokale \textit{scavenge process} gestart en de bereikbare, of levende, objecten worden naar de survivor space vanuit de allocate space gekopieerd, indien het object de tenure age bereikt heeft, wordt die naar de tenure space gekopieerd.
     \item De allocate space wordt de survivor space an de survivor space wordt de allocate space.
      Dit betekend dat de allocate space nu de objecten bevat die levend zijn maar nog niet de tenure age bereikt hadden,
      de surivor space is nu opnieuw leeg sinds de allocate space tijden de scavenge operation volledig leeg gemaakt werd.
 \end{enumerate}
 
-De \textit{Concurrent Scavenge} is een modus voor de gencon Garbage Collection policy, deze modus maakt gebruik van de IBM Pause-less algoritme. Deze modus zorgt ervoor dat het mogelijk is om Garbage Collection uit te voeren terwijl de  applicatie threads door blijven werken.
+De \textit{Concurrent Scavenge} is een modus voor de gencon Garbage Collection policy, deze modus maakt gebruik van de IBM Pause-less algoritme. Ook zorgt deze modus ervoor dat het mogelijk is om Garbage Collection uit te voeren terwijl de applicatie threads door blijven werken.
+
+
 De IBM Pauseless Garbage Collection maakt gebruik van de \textit{Guarded Storage facility}, dit is een specifiek stuk hardware dat aanwezig is vanaf de IBM Z-14 model mainframe uit 2017.
 De Guarded Storage Facility maakt het mogelijk om hardware geassisteerde \textit{read barriers} te hebben voor geheugen dat in een Garbage Collection event betrokken is.
 
 Read barriers zijn stukken code die telkens uitgevoerd worden wanneer een operatie een object aanvraagt.
 Deze barriers controleren indien dit object werkelijk in het geheugen zit.
-Wanneer er een pointer vanuit de geheugen wordt geladen, wordt de pointer gecontroleerd op dat het niet Gaurded Storage geheugen aanvraagt die momenteel in een Garbage Collection operation zit.
-Indien dit zo is, zal de control flow herleid worden.
+Wanneer er een pointer vanuit het geheugen wordt geladen, wordt de pointer gecontroleerd dat het niet Gaurded Storage geheugen aanvraagt die momenteel in een Garbage Collection operation zit.
+Indien dit zo is, zal de control flow herleidt worden.
 Hierdoor is het mogelijk om Garbage Collection uit te voeren terwijl er parallel ook nog applicatie threads draaien en verder uitgevoerd worden.\autocite{Pinto2017}
-Een software gebaseerd implementatie hiervan is zeer kostelijk voor de performantie. \autocite{LloydHosking1998}
+Een software gebaseerde implementatie hiervan is zeer kostelijk voor de performantie. \autocite{LloydHosking1998}
 De Gaurded Storage facility is een hardware gebaseerde implementatie hiervan, waardoor het een minieme overhead heeft.
 
 
 
-De gencon Garbage Collector is niet de enige Garbage Collector waarvan Java programma's op mainframe gebruik kunnen maken, alle Garbage Collectors die op de OpenJ9 VM kunnen werken kunnen dus ook voor Java op mainframe gebruikt worden, maar deze zullen niet gebruik kunnen maken van de Pause-less Garbage Collection, en dus ook niet van de Guarded Storage Facility.
+De gencon Garbage Collector is niet de enige Garbage Collector waar Java programma's op mainframe gebruik van kunnen maken.
+Alle Garbage Collectors die op de OpenJ9 VM kunnen werken kunnen ook voor Java op mainframe gebruikt worden, maar deze zullen niet gebruik kunnen maken van de Pause-less Garbage Collection, en dus ook niet van de Guarded Storage Facility.
 
 
 Nu zullen we de OpenJ9 Garbage Collectors bespreken.
@@ -236,19 +252,19 @@ Nu zullen we de OpenJ9 Garbage Collectors bespreken.
     \item \textit{balanced}
     
             Het doel van de balanced Garbage Collector is om pauzeertijden gelijkmatig te maken, om te voorkomen dat er onregelmatige lange pauzeertijden zijn, en om de overhead van sommige operaties te verminderen, zoals de compacting die gebruikt wordt.
-            Dit wordt bereikt door de Java heap onder te verdelen in een groot aantal regio's (1.000 - 2.000), deze regio's worden individueel door een generationele Garbage Collector beheerd zodanig dat er geen grootschalige Garbage Collection events nodig zijn.
+            Dit wordt bereikt door de Java heap onder te verdelen in een groot aantal regio's (1.000 - 2.000 regio's).Deze worden individueel door een generationele Garbage Collector beheerd zodanig dat er geen grootschalige Garbage Collection events nodig zijn.
             Door deze werkwijze wordt de kans op een \textit{Global} Garbage Collection cycle zeer miniem, Global cycles zijn cycles die over de gehele heap Garbage Collection uitvoeren.
 
 
     \item \textit{optavgpause}   
     
-            De \textit{Optimize for pause time} Garbage Collection policy maakt gebruik van een global Garbage Collection cycle om de heap, die maar 1 regio is, te beheren en compacting uit te voeren.
+            De \textit{Optimize for pause time} Garbage Collection policy maakt gebruik van een global Garbage Collection cycle om de heap, die maar uit 1 regio bestaat, te beheren en compacting uit te voeren.
             De globale Garbage Collection cycles worden op voorhand geanticipeerd, en er worden al enkele marking operaties uitgevoerd voor dat de Garbage Collection cycle uitgevoerd wordt.
-            Deze Garbage Collector zorgt voor minder pauzeertijden, maar heeft wel een negatieve invloed op de performantie, hij verbruikt meer werkgeheugen.
+            Deze Garbage Collector zorgt voor minder pauzeertijden, maar heeft wel een negatieve invloed op de performantie, deze verbruikt namelijk meer werkgeheugen.
 
     \item \textit{optthruput}
     
-            De \textit{Optimize for throughput} Garbage Collection policy maakt ook gebruik van een global Garbage Collection cycle om de heap, die maar 1 regio is, te beheren en compacting uit te voeren.
+            De \textit{Optimize for throughput} Garbage Collection policy maakt ook gebruik van een global Garbage Collection cycle om de heap, die uit maar 1 regio bestaat, te beheren en compacting uit te voeren.
             Het verschil met de optavgpause policy is dat de optthruput policy dit enkel doet eens de heap volledig vol is en er een allocation failure wegens te weinig vrije geheugen bij het aanmaken van een nieuw object wordt verkregen.
             Hierdoor zullen de pauzeertijden langer duren.
             Het voordeel is dat er een kleinere hoeveelheid werkgeheugen nodig is in vergelijking met de optavgpause Garbage Collector.
@@ -269,12 +285,13 @@ Nu zullen we de OpenJ9 Garbage Collectors bespreken.
 
 \section{Eerder onderzoek}
 \label{sec:eerderonderzoek}
-Er is al eerder onderzoek gedaan naar Garbage Collection, zowel in het algemene brede domein van de computerwetenschap, zoals onderzoek van \textcite{Dijkstra1978} in verband met het het creëren van een aparte processor voor Garbage Collection, of \textcite{Lieberman1981} voor Garbage Collection die met de leeftijd van objecten rekening houdt.
+Er is al eerder onderzoek gedaan naar Garbage Collection, zowel in het algemeen breed domein van de computerwetenschap. 
+Zoals onderzoek van \textcite{Dijkstra1978} in verband met het het creëren van een aparte processor voor Garbage Collection, of \textcite{Lieberman1981} voor Garbage Collection die met de leeftijd van objecten rekening houdt.
 
 
 Er is ook al onderzoek gedaan naar Garbage Collection in Java, zoals onderzoeken naar de verschillende invloeden op Garbage Collection performantie van \textcite{Dijkstra1978}, of specifieker voor de performantie van verschillende Garbage Collectors in het onderzoek van \textcite{Grgic2018}.
 
 
-Weliswaar is er nog geen publiekelijk openbaar onderzoek gedaan naar de performantie van Garbage Collection voor Java op mainframe.
+Weliswaar is er geen publiekelijk openbaar onderzoek gedaan naar de performantie van Garbage Collection voor Java op mainframe.
 Ook is er nog geen onderzoek gedaan naar wat de gevolgen zijn voor de performantie bij het gebruiken van de IBM Pause-less algoritme voor de gencon GC policy.
 Verder is er nog geen vergelijking gemaakt met de correlatie tussen Garbage Collection op niet-mainframe en op mainframe van hetzelfde programma.

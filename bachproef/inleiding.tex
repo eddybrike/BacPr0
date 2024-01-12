@@ -33,13 +33,34 @@ Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn
     \item De mainframe maakt gebruik van technologieën en programmeertalen die al ontworpen zijn sinds de eerste generaties van mainframes.
      Zoals \textit{COBOL} uit 1959 of \textit{Job Control Language} uit 1964 die beschreven werd door de uitvinder als;
     \begin{quote}{Fred Brooks}
-        Job Control Language is the worst programming language ever designed anywhere by anybody for any purpose.
+     ``\textit{Job Control Language is the worst programming language ever designed anywhere by anybody for any purpose.}''\autocite{Brooks2004}
     \end{quote}}
-    Het is noodzakelijk dat de mainframe compatibel blijft met oude programma's, deze zijn geschreven in programmeertalen die vandaag de dag als ouderwets beschouwd worden, en niet meer aangeleerd worden door de nieuwe generaties van IT'ers.
-    Daarom dat Java op mainframe gebruiken interessant is omdat er een groter aantal mensen bekwaam zijn met deze programmeertaal in vergelijking met de traditionele mainframe programmeertalen, zoals onder andere PL/I, COBOL, Assembler of CICS.
     
     
-    \item Java programma's die op mainframe draaien worden via de zIIP processor verwerkt, dit brengt ook enkele voordelen, dit onderwerp zal in de methodologie verder verbreed worden.
+
+    Een voordeel van de mainframe is dat het compatibel blijft met oude programma's, ongeacht hoe oud of welke model mainframe er gebruikt wordt.
+    Dit zorgt ook voor een nadeel ervan.
+    Omdat het compatibel blijft met zelfs de oudste programma's die geschreven werden in onder andere \textit{PL/I}, \textit{COBOL}, \textit{Assembler} of \textit{CICS}, zien we dat nieuwe programma's voor de mainframe ook in deze talen geschreven worden.
+    
+    
+    Het nadeel hiervan is dat de hedendaagse hoeveelheid mensen in de arbeidsmarkt bekwaam in deze talen laag is en blijft dalen.
+    
+    Daarom dat Java op mainframe gebruiken interessant is omdat er een groter aantal mensen bekwaam zijn met deze programmeertaal in vergelijking met de traditionele mainframe programmeertalen.
+    
+    
+  
+    
+    \item Java applicaties op mainframe worden door de zIIP processor uitgevoerd.
+    Deze processor is specifiek gemaakt om, onder andere, Java applicaties uit te voeren.
+    Hierdoor zouden de Java applicaties nog beter presteren, in vergelijking met het uitvoeren door de mainframe CPU's.
+    
+    \item De kost van de gebruikte processor verwerkingskracht van programma's via de mainframe CPU's gemeten in \textit{Million service units} (MSU).
+    Er worden extra kosten aangerekend door IBM aan de hand van de hoeveelheid MSU er verbuikt worden.
+    
+    
+    Programma's die via de zIIP processor uitgevoerd worden, dus onder andere Java applicaties, worden niet mee berekend voor de hoeveelheid gebruikte MSU.
+    Hierdoor betekend het dat het gebruiken van de zIIP processor, en dus Java applicaties, ook financieel interessant is voor een bedrijf.
+    
     
     
  \end{itemize}
@@ -47,7 +68,7 @@ Er zijn meerdere redenen waarom dit een voordeel kan bieden, de voornaamste zijn
 \label{sec:onderzoeksvraag}
 
 %Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
-De onderzoeksvraag van deze thesis is 'Wat zijn de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
+De onderzoeksvraag van deze thesis is; 'Wat zijn de gevolgen voor Garbage Collection bij het migreren van Java programma's naar mainframe?'.
 Hieruit kunnen we ook enkele deelvragen stellen.
 
 \begin{itemize}
@@ -64,11 +85,12 @@ Hieruit kunnen we ook enkele deelvragen stellen.
 \label{sec:onderzoeksdoelstelling}
 
 De doelstelling van dit onderzoek is om een vergelijkende studie te maken omtrent de werking van Garbage Collection op mainframe en niet-mainframe.
+Hierdoor zouden we een aanbeveling kunnen geven i.v.m. hoe men moet omgaan met Garbage Collection bij het migreren naar mainframe.
 Dit door het vergelijken van een aantal statistieken verkregen vanuit testprogramma's.
-
 
 %Wat is het beoogde resultaat van je bachelorproef? Wat zijn de criteria voor succes? Beschrijf die zo concreet mogelijk. Gaat het bv.\ om een proof-of-concept, een prototype, een verslag met aanbevelingen, een vergelijkende studie, enz.
 
+\pagebreak
 \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}%
 \label{sec:opzet-bachelorproef}
 
